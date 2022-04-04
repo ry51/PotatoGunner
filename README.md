@@ -5,13 +5,13 @@
 Added resources
 
 
-Gold
-Potatoes
-Copper
-Iron
-Titanium
-Diamond
-Iridium
+Gold,
+Potatoes,
+Copper,
+Iron,
+Titanium,
+Diamond,
+Iridium,
 Essence
 
 Added upgrades
