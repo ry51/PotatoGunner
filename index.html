@@ -5,12 +5,103 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Potato Gunner</title>
-<style>
-    body {
-        margin:0;
-        overflow:hidden;
-    }
-</style>
+	<style>
+    	body {
+        	margin:0;
+        	overflow:hidden;
+    	}
+	
+		#transmuter {
+			position:absolute;
+			display:none;
+			top:calc(230px + (100vh - 400px)/2);
+			left:calc(230px + 2*(100vw - 400px)/3);
+			z-index:1000;
+			height:calc((100vh - 400px)/2 - 60px);
+			width:calc((100vw - 400px)/3 - 60px);
+			font-size:16px;
+			font-family:"Courier New";
+		}
+		
+		#smelter {
+			display:none;
+			position:absolute;
+			top:calc(230px + (100vh - 400px)/2);
+			left:calc(230px + (100vw - 400px)/3);
+			z-index:1000;
+			height:calc((100vh - 400px)/2 - 60px);
+			width:calc((100vw - 400px)/3 - 60px);
+			font-size:16px;
+			font-family:"Courier New";
+		}
+		
+		#transmuteamount {
+			position:absolute;
+			display:none;
+			top:45vh;
+			left:30vw;
+			z-index:1000;
+			height:10vh;
+			width:40vw;
+			font-size:20px;
+			font-family:"Courier New";
+		}
+		
+		#smeltamount {
+			position:absolute;
+			display:none;
+			top:45vh;
+			left:30vw;
+			z-index:1000;
+			height:10vh;
+			width:40vw;
+			font-size:20px;
+			font-family:"Courier New";
+		}
+		
+		#transmuteinfo {
+			position:absolute;
+			display:none;
+			top:40vh;
+			left:30vw;
+			font-size:20px;
+			font-family:"Courier New";
+		}
+		
+		#smeltinfo {
+			position:absolute;
+			display:none;
+			top:40vh;
+			left:30vw;
+			font-size:20px;
+			font-family:"Courier New";
+		}
+		
+		#transmuteconfirm {
+			position:absolute;
+			display:none;
+			top:57vh;
+			left:30vw;
+			z-index:1000;
+			height:5vh;
+			width:20vw;
+			font-size:16px;
+			font-family:"Courier New";
+		}
+		
+		#smeltconfirm {
+			position:absolute;
+			display:none;
+			top:57vh;
+			left:30vw;
+			z-index:1000;
+			height:5vh;
+			width:20vw;
+			font-size:16px;
+			font-family:"Courier New";
+		}
+		
+	</style>
 </head>
 <body>
     <canvas></canvas>
@@ -19,5 +110,18 @@
     <script src="./classes.js"></script>
     <script src="./animate.js"></script>
     <script src="./main.js"></script>
+	<script src="./buildings.js"></script>
+	
+	<button id="transmuter" onclick="showtransmute()">Copper Transmuter<br><br>Input<br>6 Gold<br><br>Output<br>1 Copper</button>
+	<button id="smelter" onclick="showsmelter()">Iron Smelter<br><br>Input<br>4 Gold<br>1 Copper<br><br>Output<br>1 Iron</button>
+	
+	<button id="transmuteconfirm" onclick="transmutecopper()">Transmute</button>
+	<p id="transmuteinfo">Enter the number of operations (6 gold -> 1 copper counts as one)</p>
+	<input type="text" id="transmuteamount">
+	
+	
+	<button id="smeltconfirm" onclick="smeltiron()">Smelt</button>
+	<p id="smeltinfo">Enter the number of operations (4 gold + 1 copper -> 1 iron counts as one)</p>
+	<input type="text" id="smeltamount">
 </body>
 </html>

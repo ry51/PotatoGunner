@@ -1,9 +1,9 @@
 function animate() {
     requestAnimationFrame(animate);
 
-if (pause % 2 === 0) {
-frames += 1;
-}
+	if (pause % 2 === 0) {
+		frames += 1;
+	}
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
@@ -36,6 +36,18 @@ frames += 1;
             ctx.fillRect(canvas.width - 250 + 2*x, canvas.height - 250 + 2*y, 4, 4);
         }
     }
+	
+	let tilex = Math.min(99, Math.max(0, Math.floor(player.x / 100)));
+	let tiley = Math.min(99, Math.max(0, Math.floor(player.y / 100)));
+	
+	
+	if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#003166") {
+		freezemultiplier = 0.6;
+	} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#0055B3") {
+		freezemultiplier = 0.8;
+	} else {
+		freezemultiplier = 1;	
+	}
    
 
     if (hpbartoggle % 2 == 0) {
@@ -393,7 +405,7 @@ frames += 1;
     })
 
     enemies.forEach((enemy, index) => {
-        if (Math.hypot(enemy.x - player.x, enemy.y - player.y) < (2000/shadow + 10000*cta)) {
+        if (Math.hypot(enemy.x - player.x, enemy.y - player.y) < 800) {
             let angle = Math.atan2(player.y - enemy.y, player.x - enemy.x)
             if (pause % 2 === 0 && enemy.isFrozen === false) {
                 enemy.velocity = {x: Math.cos(angle)*(4 + level*0.01 + stage*0.02), y: Math.sin(angle)*(4 + level*0.01 + stage*0.02)}
@@ -516,7 +528,13 @@ frames += 1;
     ctx.fillText("Level: " + level, 60, 105)
     ctx.fillText("Health: " + Math.floor(health), 60, 140)
     ctx.fillText("Damage: " + Math.floor(damage), 60, 175)
-    ctx.fillText("Speed: " + Math.floor(speed*10)/10, 60, 210)
+	if (freezemultiplier < 1) {
+		ctx.fillStyle = "#CC0000";
+		ctx.fillText("Speed: " + Math.floor(speed*10*freezemultiplier)/10, 60, 210)	
+	} else {
+		ctx.fillText("Speed: " + Math.floor(speed*10)/10, 60, 210)	
+	}
+    ctx.fillStyle = "black"
     ctx.fillText("Experience: " + Math.floor(exp) + "/" + exp_required[level - 1], 60, 245)
     ctx.fillText("Enemies killed: " + enemies_killed, 60, 280)
     ctx.textAlign = "right"
@@ -561,11 +579,21 @@ frames += 1;
     ctx.textAlign = "right";
     ctx.fillText("[L] for resource info", canvas.width - 80, 120);
     if (exclamation == true) {
-        ctx.fillStyle = "#FFA500"
+        ctx.fillStyle = "#FFA500";
         ctx.fillText("!!  [M] for upgrades info", canvas.width - 80, 160);
     } else {
         ctx.fillText("[M] for upgrades info", canvas.width - 80, 160);
     }
+	
+	ctx.fillStyle = "black";
+	if (stage > 5) {
+		if (buildingex == true) {
+			ctx.fillStyle = "#FFA500";
+			ctx.fillText("!!  [N] for buildings info", canvas.width - 80, 200);	
+		} else {
+			ctx.fillText("[N] for buildings info", canvas.width - 80, 200);	
+		}
+	}
     ctx.fillStyle = "black"
     ctx.textAlign = "left";
     if (clickable === true && level >= 32 && !upgrade_6) {
@@ -846,8 +874,8 @@ frames += 1;
         }
         if (stage === 1) {
             ctx.font = "20px Courier New"
-            ctx.fillText("v2.0.1 new features:", 200, 270)
-            ctx.fillText("Currently reworking items", 200, 290)
+            ctx.fillText("v2.0.2 new features:", 200, 270)
+            ctx.fillText("Added buildings", 200, 290)
             ctx.fillText("Currently reworking enemies", 200, 310)
             ctx.fillText("Currently reworking everything", 200, 330)
             ctx.font = "40px Courier New"
@@ -867,7 +895,6 @@ frames += 1;
             ctx.fillText("More enemies will spawn each stage, but more loot will drop as well.", 200, 290)
             ctx.fillText("Boss packs spawn! Each stage there will be a couple bosses with minions around them", 200, 310)
             ctx.fillText("allowing you to rack up exp and loot quickly.", 200, 330)
-            ctx.font = "40px Courier New"
             ctx.font = "15px Courier New"
             ctx.fillText("COPPER now spawns in the world. Like gold and potatoes, copper is a resource that can be used", 200, 436);
             ctx.fillText("to purchase upgrades. In the later stages, copper can also be used to create more powerful", 200, 452);
@@ -875,12 +902,20 @@ frames += 1;
             ctx.fillText("ESSENCE spawns in the world, but it is an exceptionally rare and powerful resource. One", 200, 484);
             ctx.fillText("essence drops every 100 kills and all upgrades need essence to be purchased.", 200, 500);
             ctx.fillText("You have unlocked your first upgrade! Press [M] to toggle the upgrade information menu.", 200, 516);
-            
-            ctx.fillText("Good luck!", 200, 580);
         } else if (stage === 3) {
             ctx.font = "20px Courier New"
             ctx.fillText("New Content!", 200, 270)
             ctx.fillText("HOMING enemies now spawn. They deal extra damage with long-lasting seeking projectiles.", 200, 290)
+			ctx.font = "15px Courier New"
+            ctx.fillText("You will unlock new upgrades every couple of levels.", 200, 436);
+        } else if (stage === 5) {
+            ctx.font = "20px Courier New"
+            ctx.fillText("New Content!", 200, 270)
+            ctx.fillText("Every 5 levels, a MEGABOSS will spawn instead of a normal level boss. MEGABOSSES have special", 200, 290)
+			ctx.fillText("modifiers as well as extra health and damage, but drop more experience and loot.", 200, 310)
+			ctx.font = "15px Courier New"
+            ctx.fillText("The level 5 MEGABOSS spawns with the MULTISHOT modifier, making it spray a lot more", 200, 436);
+			ctx.fillText("projectiles than normal.", 200, 452);
         }
 		
 		ctx.font = "15px Courier New"
@@ -1090,7 +1125,7 @@ frames += 1;
         if (stage > 7) ctx.fillText("Titanium is a stronger metal and is used for protective gear.", 230, 450);
         if (stage > 10) ctx.fillText("Diamond is both extremely valuable and durable, but is hard to find.", 230, 510);
         if (stage > 13) ctx.fillText("Iridium can be used to power up your character and craft powerful items.", 230, 570);
-        ctx.fillText("Sacred potato essence can give what all other resources cannot.", 230, 630);
+        ctx.fillText("Sacred potato essence is rare and required for all upgrades.", 230, 630);
         ctx.fillText("[L] to close menu", 230, 690);
     }
 
@@ -1235,8 +1270,33 @@ frames += 1;
                 costdist += 1;
             }
         }
-        ctx.font = "25px Courier New"
-        ctx.fillStyle = "#000000"
+        ctx.font = "25px Courier New";
+        ctx.fillStyle = "#000000";
         ctx.fillText("[M] to close menu", 200, canvas.height - 180);
     }
+	
+	if (buildingtoggle % 2 == 0) {
+		buildingex = false;
+		
+		ctx.fillStyle = "#000000";
+        ctx.fillRect(150, 150, canvas.width - 300, canvas.height - 300);
+        ctx.fillStyle = "#E1C699";
+        ctx.fillRect(155, 155, canvas.width - 310, canvas.height - 310);
+		
+		ctx.font = "25px Courier New";
+        ctx.fillStyle = "#000000";
+		ctx.fillText("[N] to close menu", 200, canvas.height - 180);
+		if (coppertransmuter == true) {
+			document.getElementById("transmuter").style.display = "initial";	
+			
+		}
+		if (smelter == true) {
+			document.getElementById("smelter").style.display = "initial";		
+		}
+		
+	} else {
+		document.getElementById("transmuter").style.display = "none";
+		document.getElementById("smelter").style.display = "none";	
+	}
+	
 }

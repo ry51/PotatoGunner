@@ -41,7 +41,7 @@ var cleared = false;
 
 let freezemultiplier = 1;
 
-var speed = 7;
+var speed = 8;
 var damage = 10;
 var freezeduration = 0;
 var bossmultiplier = 1;
@@ -68,6 +68,7 @@ var endroundiron = 0;
 
 var clickable = false;
 var exclamation = false;
+var buildingex = false;
 var lifelevel = 0;
 var powerlevel = 0;
 var speedlevel = 0;
@@ -109,6 +110,10 @@ var savebuttontoggle = 0;
 var importtoggle = 0;
 var storetoggle = 1;
 var upgradetoggle = 1;
+var buildingtoggle = 1;
+
+var transmutedisplay = 1;
+var smeltdisplay = 1;
 
 var upgrade_1;
 var upgrade_2;
@@ -137,14 +142,15 @@ let activated = false;
 var players;
 var orderedplayers = [];
 
-var player = new Player(x, y, 60, 'blue')
+var player = new Player(x, y, 60, 'blue');
 
-var projectile = new Projectile(renderingPosX(player.x), renderingPosY(player.y), 5, 'black', {x:1, y:1}, true, pierce)
+var projectile = new Projectile(renderingPosX(player.x), renderingPosY(player.y), 5, 'black', {x:1, y:1}, true, pierce);
 var projectiles = [];
 var enemies = [];
 var enemyprojectiles = [];
 
 var upgrades = [];
+var ownedBuildings = [];
 
 var money = 0;
 var potatoes = 0;
@@ -165,6 +171,11 @@ var droppediridium = [];
 var droppedessence = [];
 
 var abilities = [];
+
+var coppertransmuter = false;
+var smelter = false;
+var transmuteinput;
+var smeltinput;
 
 // var saveobjectstring = JSON.parse(localStorage.getItem('saveobject')) || {};
 var saveobjectstring;
@@ -460,28 +471,47 @@ var minimap = [];
 noise.seed(Math.random());
 
 function edgeDist(x, y) {
-let a = 50 - x;
-let b = 50 - y;
-return Math.sqrt(a * a + b * b);
+	let a = 50 - x;
+	let b = 50 - y;
+	return Math.sqrt(a * a + b * b);
 }
 
 // generates map tile colours
 function getColor(value) {
-if (value < 0.04) {
-return "#666666";
+	if (stage < 6) {
+		if (value < 0.04) {
+			return "#081108";
         } else if (value < 0.09) {
-return "#777777";
+			return "#173518";
         } else if (value < 0.13) {
-return "#888888";
+			return "#2E6930";
         } else if (value < 0.18) {
-return "#999999";
+			return "#348C31";
         } else if (value < 0.24) {
-            return "#AAAAAA";
-        } else if (value < 0.36) {
-            return "#BBBBBB";
+            return "#EEEE00";
+        } else if (value < 0.31) {
+            return "#0055B3";
         } else {
-            return "#CCCCCC";
+            return "#003166";
         }
+	} else if (stage < 11) {
+		if (value < 0.04) {
+			return "#B19A6A";
+        } else if (value < 0.09) {
+			return "#B9A57A";
+        } else if (value < 0.13) {
+			return "#C2B18B";
+        } else if (value < 0.18) {
+			return "#CBBC9B";
+        } else if (value < 0.24) {
+            return "#D4C7AC";
+        } else if (value < 0.31) {
+            return "#CEE8F0";
+        } else {
+            return "#ADD8E6";
+        }
+	}
+		
 }
 
 mousePos = {x:0, y:0}
@@ -527,7 +557,7 @@ function spawnBoss(x, y, radius, health, maxhealth, expdrop, projradius, projcol
 
 function spawnSuperBoss(x, y, radius, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage) {
     let velocity = {x: 0, y: 0};
-    enemies.push(new Enemy(x, y, radius, velocity, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage, false, false, false, 0, 5 + Math.floor(stage/3), "mountainsuperboss.png", true, true, false))
+    enemies.push(new Enemy(x, y, radius, velocity, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage, false, false, false, 0, stage == 5 ? 20 : 5 + Math.floor(stage/3), "mountainsuperboss.png", true, true, false))
 }
 
 
@@ -586,7 +616,12 @@ for (let i = 0; i < 30 + stage*6; i++) {
     }
 
 */
-spawnSuperBoss(9999, 9999, 150, (level + 10)*1.04**stage*60, (level + 10)*1.04**stage*60, Math.floor((level + 10)*1.04**stage*6), 15, "#00F000", 1, 10, 10, stage/2)
+	if (stage % 5 != 0) {
+		spawnSuperBoss(9999, 9999, 150, (level + 10)*1.04**stage*180, (level + 10)*1.04**stage*180, Math.floor((level + 10)*1.04**stage*27), 15, "#00F000", 1, 10, 10, stage/2)
+	} else {
+		spawnSuperBoss(4999, 4999, 150, (level + 10)*1.04**stage*180, (level + 10)*1.04**stage*180, Math.floor((level + 10)*1.04**stage*27), 15, "#00F000", 1, 10, 10, stage*1.5)
+	}
+
 //function spawnSuperBoss(x, y, radius, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage, image) {
     //let velocity = {x: 0, y: 0};
     //enemies.push(new SuperBoss(x, y, radius, velocity, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage, image))
@@ -602,6 +637,20 @@ function radiusboost() {
 
 function drboost() {
     damagereduced += 80;
+}
+
+function buildtransmute() {
+	coppertransmuter = true;
+	buildingex = true;
+}
+
+function buildsmelter() {
+	smelter = true;
+	buildingex = true;
+}
+
+function destructionboost() {
+	impactlevel += 1;	
 }
 
 function buyUpgrade(costau, costp, costcu, costfe, costti, costd, costir, coste, func, index) {
@@ -654,6 +703,18 @@ function newStage() {
     if (stage == 4) {
         exclamation = true;
         upgrades.push(new Upgrade("Armored I", "Enemy damage reduced by 8%.", 200, 450, 75, 0, 0, 0, 0, 1, drboost))
+    }
+	if (stage == 6) {
+        exclamation = true;
+        upgrades.push(new Upgrade("Copper Transmuter", "A building that allows you to turn gold into copper.", 800, 200, 150, 100, 0, 0, 0, 3, buildtransmute))
+    }
+	if (stage == 9) {
+        exclamation = true;
+        upgrades.push(new Upgrade("Iron Smelter", "A building that allows you to turn gold and copper into iron.", 900, 300, 200, 200, 100, 0, 0, 3, buildsmelter))
+    }
+	if (stage == 11) {
+        exclamation = true;
+        upgrades.push(new Upgrade("Destruction I", "Each hit on an enemy takes off 0.1% of their current life.", 1200, 900, 800, 800, 600, 100, 0, 1, destructionboost))
     }
     
     if (stage === 25 && weakened === false) {
@@ -709,12 +770,14 @@ addEventListener("keydown", event => {
         resourcetoggle += 1;
     } else if (event.key === "m") {
         upgradetoggle += 1;
+    } else if (event.key === "n") {
+        buildingtoggle += 1;
     } else if (event.key === "q") {
         while (health < maxhealth - 10 && potatoes > 0) {
             potatoes -= 1;
             health += 10;
         }
-    } else if (event.keyCode < 58 && event.keyCode > 51) {
+    } else if (event.keyCode < 58 && event.keyCode > 51 && buildingtoggle % 2 == 1) {
         buyUpgrade(upgrades[event.keyCode - 52].costau, upgrades[event.keyCode - 52].costp, upgrades[event.keyCode - 52].costcu, upgrades[event.keyCode - 52].costfe, upgrades[event.keyCode - 52].costti, upgrades[event.keyCode - 52].costd, upgrades[event.keyCode - 52].costir, upgrades[event.keyCode - 52].coste, upgrades[event.keyCode - 52].func, event.keyCode - 52);
     }
 })
