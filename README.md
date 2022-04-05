@@ -17,3 +17,12 @@ Essence
 Added upgrades
 
 Info and gameplay complete to stage 4
+
+## V2.0.2
+
+Added buildings
+
+Copper Transmuter, Iron Smelter
+
+
+Info and gameplay complete to stage 6-7
