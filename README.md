@@ -26,3 +26,12 @@ Copper Transmuter, Iron Smelter
 
 
 Info and gameplay complete to stage 6-7
+
+
+## V2.0.3
+
+Added desert terrain and sandstorms
+
+Reworked xp and point system slightly
+
+
