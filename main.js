@@ -41,6 +41,8 @@ var cleared = false;
 
 let freezemultiplier = 1;
 
+let ss = 12000;
+
 var speed = 8;
 var damage = 10;
 var freezeduration = 0;
@@ -51,7 +53,7 @@ var health = 600;
 var maxhealth = 600;
 var reload_time = 15;
 var exp = 0;
-var exp_required = [50, 150, 300, 500, 800, 1200, 1600, 2200, 2800, 3500, 5000, 6500, 8000, 10000, 12000, 15000, 18000, 22000, 26000, 30000, 45000, 50000, 56000, 64000, 70000, 80000, 90000, 100000, 120000, 140000, 170000, 200000, 240000, 280000, 330000, 380000, 450000];
+var exp_required = [25, 100, 250, 400, 600, 900, 1200, 1600, 2000, 2500, 3200, 4500, 6000, 7500, 9000, 12000, 15000, 18000, 22000, 27000, 32000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 120000, 140000, 170000, 200000, 240000, 280000, 330000, 380000, 450000];
 
 var leech = 0;
 
@@ -176,6 +178,9 @@ var coppertransmuter = false;
 var smelter = false;
 var transmuteinput;
 var smeltinput;
+
+var sandstorm = Math.random();
+var sandstormdirection;
 
 // var saveobjectstring = JSON.parse(localStorage.getItem('saveobject')) || {};
 var saveobjectstring;
@@ -359,6 +364,7 @@ function enemydeath(enemy) {
     if (exp >= exp_required[level-1]) {
         level += 1;
         clickable = true;
+		points += 3;
     }
 	
 	if (enemies_killed % 100 == 0) {
@@ -448,6 +454,11 @@ function firearc(projectilecount) {
         let velocity = {x:Math.cos(angle + 0.01*i)*15, y:Math.sin(angle + 0.01*i)*15}
         projectiles.push(new Projectile(player.x, player.y, 5, "#FF9900", velocity, pierce))
     }
+}
+
+// change sandstorm direction
+function changess() {
+	sandstorm = Math.floor(Math.random()*4);
 }
 
 /*
@@ -566,13 +577,20 @@ function addAbility(name, hotkey, cooldown, cooldownremaining, state) {
 }
 
 function spawnNextStage(stage) {
-    for (let i = 0; i < 100 + stage*6; i++) {
-        if (stage < 40) {
-            spawnEnemy(Math.random()*10000, Math.random()*10000, 25, (level + 10)*1.04**stage*1.5, (level + 10)*1.04**stage*1.5, Math.floor((level + 10)*1.04**stage/10*1.5), 5, "#FF0000", 1, 75, 75, stage/2)
-        }
-    }
-
-
+	if (stage < 6) {
+		for (let i = 0; i < 100 + stage*6; i++) {
+        	if (stage < 40) {
+            	spawnEnemy(Math.random()*10000, Math.random()*10000, 25, (level + 10)*1.04**stage*1.5, (level + 10)*1.04**stage*1.5, Math.floor((level + 10)*1.04**stage/10*1.5), 5, "#FF0000", 1, 75, 75, stage/2)
+        	}
+    	}
+	} else if (stage < 11) {
+		for (let i = 0; i < 20 + stage*6; i++) {
+        	if (stage < 40) {
+            	spawnEnemy(Math.random()*10000, Math.random()*10000, 25, (level + 10)*1.04**stage*1.5, (level + 10)*1.04**stage*1.5, Math.floor((level + 10)*1.04**stage/10*1.5), 5, "#FF0000", 1, 75, 75, stage/2)
+        	}
+    	}
+	}
+    
     // x, y, radius, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage
     if (stage > 2) {
         for (let i = 0; i < 50 + stage*5; i++) {
@@ -583,8 +601,8 @@ function spawnNextStage(stage) {
     }
     
     // x, y, radius, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage, multi
-    if (stage > 6) {
-        for (let i = 0; i < 40 + stage*4; i++) {
+    if (stage > 5) {
+        for (let i = 0; i < 80 + stage*4; i++) {
             if (stage < 40) {
                 spawnMultiEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.04**stage*1.8, (level + 10)*1.04**stage*1.8, Math.floor((level + 10)*1.04**stage/10*1.8), 5, "#F00000", 1, 75, 75, stage/2, Math.floor(Math.random()*6 + 6))
             }
@@ -684,7 +702,7 @@ function newStage() {
     }, 1)
     cta = 0;
     infotoggle = 0;
-    points += Math.floor(stage/20 + 1)*2;
+    points += Math.floor(stage/5 + 1)*2;
     health += 200;
     maxhealth += 50;
     health = maxhealth;

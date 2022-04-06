@@ -37,6 +37,28 @@ function animate() {
         }
     }
 	
+	if (stage > 5 && stage < 11) {
+		if (pause % 2 === 0) {
+			if (sandstorm == 0) {
+				player.x -= (3 + stage/8);	
+			} else if (sandstorm == 1) {
+				player.x += (3 + stage/8);	
+			} else if (sandstorm == 2) {
+				player.y -= (3 + stage/8);	
+			} else {
+				player.y += (3 + stage/8);	
+			}
+			ss += 1;
+			if (ss > 1000) {
+				ss = 0;	
+				changess();
+			}
+		}
+		
+	}
+	
+	
+	
 	let tilex = Math.min(99, Math.max(0, Math.floor(player.x / 100)));
 	let tiley = Math.min(99, Math.max(0, Math.floor(player.y / 100)));
 	
@@ -874,9 +896,9 @@ function animate() {
         }
         if (stage === 1) {
             ctx.font = "20px Courier New"
-            ctx.fillText("v2.0.2 new features:", 200, 270)
+            ctx.fillText("v2.0.3 new features:", 200, 270)
             ctx.fillText("Added buildings", 200, 290)
-            ctx.fillText("Currently reworking enemies", 200, 310)
+            ctx.fillText("Added desert terrain mechanics", 200, 310)
             ctx.fillText("Currently reworking everything", 200, 330)
             ctx.font = "40px Courier New"
             ctx.fillText("Rules:", 200, 400)
@@ -916,6 +938,18 @@ function animate() {
 			ctx.font = "15px Courier New"
             ctx.fillText("The level 5 MEGABOSS spawns with the MULTISHOT modifier, making it spray a lot more", 200, 436);
 			ctx.fillText("projectiles than normal.", 200, 452);
+        } else if (stage === 6) {
+            ctx.font = "20px Courier New"
+            ctx.fillText("New Content!", 200, 270)
+            ctx.fillText("Welcome to the desert! This new terrain brings various benefits and hinderences.", 200, 290)
+			ctx.fillText("MULTISHOT enemies now spawn. They will shoot a barrage of bullets at you.", 200, 310)
+			ctx.font = "15px Courier New"
+            ctx.fillText("You have unlocked BUILDINGS! To unlock a building, you need to research it in the upgrades", 200, 436);
+			ctx.fillText("tab. Buildings allow you to turn less valuable resources into more valuable resources.", 200, 452);
+            ctx.fillText("Strong winds in the desert terrain cause SANDSTORMS to occur. You're not very stong yet, so", 200, 468);
+            ctx.fillText("sandstorms actually cause you quite a bit of trouble. You will be blown in a random direction", 200, 484);
+            ctx.fillText("(either up, down, left, or right) that will constantly change about once every 15-20 seconds.", 200, 500);
+            ctx.fillText("Be careful!", 200, 516);
         }
 		
 		ctx.font = "15px Courier New"

@@ -17,7 +17,7 @@ function agility_update() {
 
 //t1
 function fighter() {
-    reload_time = 12;
+    reload_time = 10;
     speed += 1;
 }
 function multishot() {
@@ -30,7 +30,7 @@ function heavy() {
 
 //t2
 function fighter2() {
-    reload_time = 9;
+    reload_time = 7;
     damage += 2;
     speed += 1;
 }
@@ -57,7 +57,7 @@ function explosive() {
 
 //t3
 function fighter3() {
-    reload_time = 6;
+    reload_time = 5;
     damage += 3;
     speed += 1;
 }
