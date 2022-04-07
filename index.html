@@ -35,6 +35,30 @@
 			font-family:"Courier New";
 		}
 		
+		#compressor {
+			display:none;
+			position:absolute;
+			top:calc(230px + (100vh - 400px)/2);
+			left:230px;
+			z-index:1000;
+			height:calc((100vh - 400px)/2 - 60px);
+			width:calc((100vw - 400px)/3 - 60px);
+			font-size:16px;
+			font-family:"Courier New";
+		}
+		
+		#pressurizer {
+			display:none;
+			position:absolute;
+			top:230px;
+			left:calc(230px + 2*(100vw - 400px)/3);
+			z-index:1000;
+			height:calc((100vh - 400px)/2 - 60px);
+			width:calc((100vw - 400px)/3 - 60px);
+			font-size:16px;
+			font-family:"Courier New";
+		}
+		
 		#transmuteamount {
 			position:absolute;
 			display:none;
@@ -59,6 +83,30 @@
 			font-family:"Courier New";
 		}
 		
+		#compressamount {
+			position:absolute;
+			display:none;
+			top:45vh;
+			left:30vw;
+			z-index:1000;
+			height:10vh;
+			width:40vw;
+			font-size:20px;
+			font-family:"Courier New";
+		}
+		
+		#pressurizeamount {
+			position:absolute;
+			display:none;
+			top:45vh;
+			left:30vw;
+			z-index:1000;
+			height:10vh;
+			width:40vw;
+			font-size:20px;
+			font-family:"Courier New";
+		}
+		
 		#transmuteinfo {
 			position:absolute;
 			display:none;
@@ -69,6 +117,24 @@
 		}
 		
 		#smeltinfo {
+			position:absolute;
+			display:none;
+			top:40vh;
+			left:30vw;
+			font-size:20px;
+			font-family:"Courier New";
+		}
+		
+		#compressinfo {
+			position:absolute;
+			display:none;
+			top:40vh;
+			left:30vw;
+			font-size:20px;
+			font-family:"Courier New";
+		}
+		
+		#pressurizeinfo {
 			position:absolute;
 			display:none;
 			top:40vh;
@@ -101,6 +167,30 @@
 			font-family:"Courier New";
 		}
 		
+		#compressconfirm {
+			position:absolute;
+			display:none;
+			top:57vh;
+			left:30vw;
+			z-index:1000;
+			height:5vh;
+			width:20vw;
+			font-size:16px;
+			font-family:"Courier New";
+		}
+		
+		#pressurizeconfirm {
+			position:absolute;
+			display:none;
+			top:57vh;
+			left:30vw;
+			z-index:1000;
+			height:5vh;
+			width:20vw;
+			font-size:16px;
+			font-family:"Courier New";
+		}
+		
 	</style>
 </head>
 <body>
@@ -114,6 +204,8 @@
 	
 	<button id="transmuter" onclick="showtransmute()">Copper Transmuter<br><br>Input<br>6 Gold<br><br>Output<br>1 Copper</button>
 	<button id="smelter" onclick="showsmelter()">Iron Smelter<br><br>Input<br>4 Gold<br>1 Copper<br><br>Output<br>1 Iron</button>
+	<button id="compressor" onclick="showcompressor()">Titanium Compressor<br><br>Input<br>3 Gold<br>3 Copper<br>1 Iron<br><br>Output<br>2 Titanium</button>
+	<button id="pressurizer" onclick="showpressurizer()">Diamond pressurizer<br><br>Input<br>4 Gold<br>3 Iron<br>2 Titanium<br><br>Output<br>1 Diamond</button>
 	
 	<button id="transmuteconfirm" onclick="transmutecopper()">Transmute</button>
 	<p id="transmuteinfo">Enter the number of operations (6 gold -> 1 copper counts as one)</p>
@@ -123,5 +215,13 @@
 	<button id="smeltconfirm" onclick="smeltiron()">Smelt</button>
 	<p id="smeltinfo">Enter the number of operations (4 gold + 1 copper -> 1 iron counts as one)</p>
 	<input type="text" id="smeltamount">
+	
+	<button id="compressconfirm" onclick="compresstitanium()">Compress</button>
+	<p id="compressinfo">Enter the number of operations (3 gold + 3 copper + 1 iron -> 2 titanium counts as one)</p>
+	<input type="text" id="compressamount">
+	
+	<button id="pressurizeconfirm" onclick="pressurizediamond()">Pressurize</button>
+	<p id="pressurizeinfo">Enter the number of operations (4 gold + 3 iron + 2 titanium -> 1 diamond counts as one)</p>
+	<input type="text" id="pressurizeamount">
 </body>
 </html>

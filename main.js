@@ -49,11 +49,11 @@ var freezeduration = 0;
 var bossmultiplier = 1;
 var dot_damage = 0;
 var dot_duration = 0;
-var health = 600;
-var maxhealth = 600;
+var health = 950;
+var maxhealth = 950;
 var reload_time = 15;
 var exp = 0;
-var exp_required = [25, 100, 250, 400, 600, 900, 1200, 1600, 2000, 2500, 3200, 4500, 6000, 7500, 9000, 12000, 15000, 18000, 22000, 27000, 32000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 120000, 140000, 170000, 200000, 240000, 280000, 330000, 380000, 450000];
+var exp_required = [10, 100, 250, 400, 600, 900, 1200, 1600, 2000, 2500, 3200, 4500, 6000, 7500, 9000, 12000, 15000, 18000, 22000, 27000, 32000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 120000, 140000, 170000, 200000, 240000, 280000, 330000, 380000, 450000];
 
 var leech = 0;
 
@@ -116,6 +116,8 @@ var buildingtoggle = 1;
 
 var transmutedisplay = 1;
 var smeltdisplay = 1;
+var compressdisplay = 1;
+var pressurizedisplay = 1;
 
 var upgrade_1;
 var upgrade_2;
@@ -176,8 +178,12 @@ var abilities = [];
 
 var coppertransmuter = false;
 var smelter = false;
+var compressor = false;
+var pressurizer = false;
 var transmuteinput;
 var smeltinput;
+var compressinput;
+var pressurizerinput;
 
 var sandstorm = Math.random();
 var sandstormdirection;
@@ -372,19 +378,19 @@ function enemydeath(enemy) {
 	}
 	
     if (randomizer < 0.015 + 0.015*dropchancebonus && randomizer > 0.01 && stage > 13) {
-        droppediridium.push(new Iridium(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/6 + stage/10))/7)))
+        droppediridium.push(new Iridium(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/2 + stage/6))/4)))
     } else if (randomizer < 0.04 + 0.02*dropchancebonus && randomizer > 0.02 && stage > 10) {
-        droppeddiamond.push(new Diamond(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/6 + stage/10))/6)))
+        droppeddiamond.push(new Diamond(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/2 + stage/6))/3.5)))
     } else if (randomizer < 0.06 + 0.03*dropchancebonus && randomizer > 0.04 && stage > 7) {
-        droppedtitanium.push(new Titanium(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/6 + stage/10))/5)))
+        droppedtitanium.push(new Titanium(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/2 + stage/6))/3)))
     } else if (randomizer < 0.09 + 0.045*dropchancebonus && randomizer > 0.06 && stage > 4) {
-        droppediron.push(new Iron(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/6 + stage/10))/4)))
+        droppediron.push(new Iron(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/2 + stage/6))/2.5)))
     } else if (randomizer < 0.12 + 0.06*dropchancebonus && randomizer > 0.09 && stage > 1) {
-        droppedcopper.push(new Copper(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/6 + stage/10))/3)))
+        droppedcopper.push(new Copper(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/2 + stage/6))/2)))
     } else if (randomizer < 0.18 + 0.09*dropchancebonus && randomizer > 0.012) {
-        droppedpotatoes.push(new Potato(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/6 + stage/10))/2)))
+        droppedpotatoes.push(new Potato(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/2 + stage/6))/1.5)))
     } else if (randomizer < 0.27 + 0.13*dropchancebonus && randomizer > 0.18) {
-        gold.push(new Gold(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/6 + stage/10))/1)))
+        gold.push(new Gold(enemy.x, enemy.y, Math.floor((0.8 + (0.5 + 0.5*Math.random())*10*(2 + level/2 + stage/6))/1)))
     }
     if (enemy.isSuperBoss === true && winnable === true) {
         newStage()
@@ -521,6 +527,22 @@ function getColor(value) {
         } else {
             return "#ADD8E6";
         }
+	} else if (stage < 16) {
+		if (value < 0.04) {
+			return "#CCCCCC";
+        } else if (value < 0.09) {
+			return "#BBBBBB";
+        } else if (value < 0.13) {
+			return "#AAAAAA";
+        } else if (value < 0.18) {
+			return "#999999";
+        } else if (value < 0.24) {
+            return "#888888";
+        } else if (value < 0.31) {
+            return "#777777";
+        } else {
+            return "#666666";
+        }
 	}
 		
 }
@@ -580,13 +602,13 @@ function spawnNextStage(stage) {
 	if (stage < 6) {
 		for (let i = 0; i < 100 + stage*6; i++) {
         	if (stage < 40) {
-            	spawnEnemy(Math.random()*10000, Math.random()*10000, 25, (level + 10)*1.04**stage*1.5, (level + 10)*1.04**stage*1.5, Math.floor((level + 10)*1.04**stage/10*1.5), 5, "#FF0000", 1, 75, 75, stage/2)
+            	spawnEnemy(Math.random()*10000, Math.random()*10000, 25, (level + 10)*1.06**stage*1.5, (level + 10)*1.06**stage*1.5, Math.floor((level + 10)*1.06**stage/10*1.5), 5, "#FF0000", 1, 75, 75, stage/2)
         	}
     	}
 	} else if (stage < 11) {
 		for (let i = 0; i < 20 + stage*6; i++) {
         	if (stage < 40) {
-            	spawnEnemy(Math.random()*10000, Math.random()*10000, 25, (level + 10)*1.04**stage*1.5, (level + 10)*1.04**stage*1.5, Math.floor((level + 10)*1.04**stage/10*1.5), 5, "#FF0000", 1, 75, 75, stage/2)
+            	spawnEnemy(Math.random()*10000, Math.random()*10000, 25, (level + 10)*1.06**stage*1.5, (level + 10)*1.06**stage*1.5, Math.floor((level + 10)*1.06**stage/10*1.5), 5, "#FF0000", 1, 75, 75, stage/2)
         	}
     	}
 	}
@@ -595,7 +617,7 @@ function spawnNextStage(stage) {
     if (stage > 2) {
         for (let i = 0; i < 50 + stage*5; i++) {
             if (stage < 40) {
-                spawnHomingEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.04**stage*1.5, (level + 10)*1.04**stage*1.5, Math.floor(((level + 10)*1.04**stage/10)*1.5), 5, "#800000", 1, 65, 65, stage/2 + 1)
+                spawnHomingEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.06**stage*1.5, (level + 10)*1.06**stage*1.5, Math.floor(((level + 10)*1.06**stage/10)*1.5), 5, "#800000", 1, 65, 65, stage/2 + 1)
             }
         }
     }
@@ -604,7 +626,7 @@ function spawnNextStage(stage) {
     if (stage > 5) {
         for (let i = 0; i < 80 + stage*4; i++) {
             if (stage < 40) {
-                spawnMultiEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.04**stage*1.8, (level + 10)*1.04**stage*1.8, Math.floor((level + 10)*1.04**stage/10*1.8), 5, "#F00000", 1, 75, 75, stage/2, Math.floor(Math.random()*6 + 6))
+                spawnMultiEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.06**stage*1.8, (level + 10)*1.06**stage*1.8, Math.floor((level + 10)*1.06**stage/10*1.8), 5, "#F00000", 1, 75, 75, stage/2, Math.floor(Math.random()*6 + 6))
             }
         }
     }
@@ -615,9 +637,9 @@ function spawnNextStage(stage) {
             if (stage < 40) {
                 let bossx = Math.random()*10000;
                 let bossy = Math.random()*10000;
-                spawnBoss(bossx, bossy, 60, (level + 10)*1.04**stage*15, (level + 10)*1.04**stage*15, Math.floor((level + 10)*1.04**stage*1.5), 7, "#CC0000", 1, 12, 12, stage/2 + 3)
+                spawnBoss(bossx, bossy, 60, (level + 10)*1.06**stage*15, (level + 10)*1.06**stage*15, Math.floor((level + 10)*1.06**stage*1.5), 7, "#CC0000", 1, 12, 12, stage/1.5 + 3)
                 for (let i = 0; i < Math.floor(Math.random()*8 + 10); i++) {
-                    spawnEnemy(bossx + Math.random()*600 - 600, bossy + Math.random()*600 - 600, 25, (level + 10)*1.04**stage, (level + 10)*1.04**stage, Math.floor((level + 10)*1.04**stage/10), 5, "#FF0000", 1, 75, 75, stage/2)
+                    spawnEnemy(bossx + Math.random()*600 - 600, bossy + Math.random()*600 - 600, 25, (level + 10)*1.06**stage, (level + 10)*1.06**stage, Math.floor((level + 10)*1.06**stage/10), 5, "#FF0000", 1, 75, 75, stage/1.5)
                 }
             }
         } 
@@ -629,15 +651,15 @@ function spawnNextStage(stage) {
 /*
 for (let i = 0; i < 30 + stage*6; i++) {
         if (stage < 40) {
-            spawnNovaEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.04**stage, (level + 10)*1.04**stage, Math.floor((level + 10)*1.04**stage/10), 5, "#F00000", 1, 75, 75, stage/2, 50)
+            spawnNovaEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.06**stage, (level + 10)*1.06**stage, Math.floor((level + 10)*1.06**stage/10), 5, "#F00000", 1, 75, 75, stage/2, 50)
         }
     }
 
 */
 	if (stage % 5 != 0) {
-		spawnSuperBoss(9999, 9999, 150, (level + 10)*1.04**stage*180, (level + 10)*1.04**stage*180, Math.floor((level + 10)*1.04**stage*27), 15, "#00F000", 1, 10, 10, stage/2)
+		spawnSuperBoss(9999, 9999, 150, (level + 10)*1.06**stage*180*Math.floor(1 + stage/10), (level + 10)*1.06**stage*180*Math.floor(1 + stage/10), Math.floor((level + 10)*1.06**stage*9*Math.floor(1 + stage/10)), 15, "#00F000", 1, 10, 10, stage/2)
 	} else {
-		spawnSuperBoss(4999, 4999, 150, (level + 10)*1.04**stage*180, (level + 10)*1.04**stage*180, Math.floor((level + 10)*1.04**stage*27), 15, "#00F000", 1, 10, 10, stage*1.5)
+		spawnSuperBoss(4999, 4999, 150, (level + 10)*1.06**stage*180*Math.floor(1 + stage/10), (level + 10)*1.06**stage*180*Math.floor(1 + stage/10), Math.floor((level + 10)*1.06**stage*27*Math.floor(1 + stage/10)), 15, "#00F000", 1, 10, 10, stage*1.5)
 	}
 
 //function spawnSuperBoss(x, y, radius, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage, image) {
@@ -664,6 +686,16 @@ function buildtransmute() {
 
 function buildsmelter() {
 	smelter = true;
+	buildingex = true;
+}
+
+function buildcompressor() {
+	compressor = true;
+	buildingex = true;
+}
+
+function buildpressurizer() {
+	pressurizer = true;
 	buildingex = true;
 }
 
@@ -724,13 +756,21 @@ function newStage() {
     }
 	if (stage == 6) {
         exclamation = true;
-        upgrades.push(new Upgrade("Copper Transmuter", "A building that allows you to turn gold into copper.", 800, 200, 150, 100, 0, 0, 0, 3, buildtransmute))
+        upgrades.push(new Upgrade("Copper Transmuter", "A building that allows you to turn gold into copper.", 800, 200, 150, 100, 0, 0, 0, 1, buildtransmute))
     }
-	if (stage == 9) {
+	if (stage == 8) {
         exclamation = true;
-        upgrades.push(new Upgrade("Iron Smelter", "A building that allows you to turn gold and copper into iron.", 900, 300, 200, 200, 100, 0, 0, 3, buildsmelter))
+        upgrades.push(new Upgrade("Iron Smelter", "A building that allows you to turn gold and copper into iron.", 900, 300, 200, 200, 100, 0, 0, 1, buildsmelter))
     }
-	if (stage == 11) {
+	if (stage == 10) {
+        exclamation = true;
+        upgrades.push(new Upgrade("Titanium Compressor", "A building that allows you to turn gold, copper, and iron into titanium.", 1100, 300, 400, 300, 100, 0, 0, 1, buildcompressor))
+    }
+	if (stage == 15) {
+        exclamation = true;
+        upgrades.push(new Upgrade("Diamond Pressurizer", "A building that allows you to turn gold, iron, and titanium into diamond.", 3000, 300, 400, 300, 300, 100, 0, 1, buildpressurizer))
+    }
+	if (stage == 14) {
         exclamation = true;
         upgrades.push(new Upgrade("Destruction I", "Each hit on an enemy takes off 0.1% of their current life.", 1200, 900, 800, 800, 600, 100, 0, 1, destructionboost))
     }
@@ -745,15 +785,15 @@ function newStage() {
     player.y = canvas.height / 2;
 	
 	if (stage > 1) {
-		endroundgold = Math.floor((30 + stage*8*Math.random())*Math.random() + 30);
-		endroundpotatoes = Math.floor(((30 + stage*8*Math.random())*Math.random() + 30)/2);
+		endroundgold = Math.floor((30 + stage*20*Math.random())*Math.random() + 30);
+		endroundpotatoes = Math.floor(((30 + stage*20*Math.random())*Math.random() + 30)/2);
 	}
 	
 	if (stage > 2) {
-		endroundcopper = Math.floor(((30 + stage*8*Math.random())*Math.random() + 30)/5);
+		endroundcopper = Math.floor(((30 + stage*30*Math.random())*Math.random() + 30)/5);
 	}
 	if (stage > 5) {
-		endroundiron = Math.floor(((30 + stage*8*Math.random())*Math.random() + 30)/7);
+		endroundiron = Math.floor(((30 + stage*32*Math.random())*Math.random() + 30)/7);
 	}
 	
 	money += endroundgold;

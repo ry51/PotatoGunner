@@ -486,7 +486,7 @@ function animate() {
                     }
 
                     enemies[index].health -= damage*bossmultiplier;
-                    health += damage*bossmultiplier*leech/100;
+                    health += damage*bossmultiplier*leech/100/Math.log(stage);
                     if (health > maxhealth) {
                         health = maxhealth;
                     }
@@ -495,7 +495,7 @@ function animate() {
                         enemies[index].health *= (1-0.001*impactlevel);
                     }
                     enemies[index].health -= damage
-                    health += damage*leech/100;
+                    health += damage*leech/100/Math.log(stage);
                     if (health > maxhealth) {
                         health = maxhealth;
                     }
@@ -950,6 +950,14 @@ function animate() {
             ctx.fillText("sandstorms actually cause you quite a bit of trouble. You will be blown in a random direction", 200, 484);
             ctx.fillText("(either up, down, left, or right) that will constantly change about once every 15-20 seconds.", 200, 500);
             ctx.fillText("Be careful!", 200, 516);
+        } else if (stage === 10) {
+			ctx.font = "15px Courier New"
+            ctx.fillText("You have unlocked BUILDINGS! To unlock a building, you need to research it in the upgrades", 200, 436);
+			ctx.fillText("tab. Buildings allow you to turn less valuable resources into more valuable resources.", 200, 452);
+            ctx.fillText("Strong winds in the desert terrain cause SANDSTORMS to occur. You're not very stong yet, so", 200, 468);
+            ctx.fillText("sandstorms actually cause you quite a bit of trouble. You will be blown in a random direction", 200, 484);
+            ctx.fillText("(either up, down, left, or right) that will constantly change about once every 15-20 seconds.", 200, 500);
+            ctx.fillText("Be careful!", 200, 516);
         }
 		
 		ctx.font = "15px Courier New"
@@ -1327,10 +1335,18 @@ function animate() {
 		if (smelter == true) {
 			document.getElementById("smelter").style.display = "initial";		
 		}
+		if (compressor == true) {
+			document.getElementById("compressor").style.display = "initial";		
+		}
+		if (pressurizer == true) {
+			document.getElementById("pressurizer").style.display = "initial";		
+		}
 		
 	} else {
 		document.getElementById("transmuter").style.display = "none";
 		document.getElementById("smelter").style.display = "none";	
+		document.getElementById("compressor").style.display = "none";	
+		document.getElementById("pressurizer").style.display = "none";
 	}
 	
 }
