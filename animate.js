@@ -486,7 +486,7 @@ function animate() {
                     }
 
                     enemies[index].health -= damage*bossmultiplier;
-                    health += damage*bossmultiplier*leech/100/Math.log(stage);
+                    health += damage*bossmultiplier*leech/100/Math.log(stage+1);
                     if (health > maxhealth) {
                         health = maxhealth;
                     }
@@ -495,7 +495,7 @@ function animate() {
                         enemies[index].health *= (1-0.001*impactlevel);
                     }
                     enemies[index].health -= damage
-                    health += damage*leech/100/Math.log(stage);
+                    health += damage*leech/100/Math.log(stage+1);
                     if (health > maxhealth) {
                         health = maxhealth;
                     }
