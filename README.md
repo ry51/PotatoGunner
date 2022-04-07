@@ -40,7 +40,7 @@ Added two new buildings (titanium compressor and diamond pressurizer)
 
 Reworked enemy scaling (1.04x per stage -> 1.06x per stage, superbosses now gain +100% health every 10 stages)
 
-Nerfed leech (3% -> 3%/ln(stage))
+Nerfed leech (3% -> 3%/ln(stage+1))
 
 Increased resource drop amount
 
