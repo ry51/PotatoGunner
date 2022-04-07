@@ -34,162 +34,164 @@ let encodedstring;
 let decodedstring;
 let parsedstring;
 
-var dead = false;
-var stage = 0;
-var level = 1;
-var cleared = false;
-
+let dead = false;
+let stage = 0;
+let level = 1;
 let freezemultiplier = 1;
 
 let ss = 12000;
 
-var speed = 8;
-var damage = 10;
-var freezeduration = 0;
-var bossmultiplier = 1;
-var dot_damage = 0;
-var dot_duration = 0;
-var health = 950;
-var maxhealth = 950;
-var reload_time = 15;
-var exp = 0;
-var exp_required = [10, 100, 250, 400, 600, 900, 1200, 1600, 2000, 2500, 3200, 4500, 6000, 7500, 9000, 12000, 15000, 18000, 22000, 27000, 32000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 120000, 140000, 170000, 200000, 240000, 280000, 330000, 380000, 450000];
+let speed = 8;
+let damage = 10;
+let freezeduration = 0;
+let bossmultiplier = 1;
+let dot_damage = 0;
+let dot_duration = 0;
+let health = 950;
+let maxhealth = 950;
+let reload_time = 15;
+let exp = 0;
+let exp_required = [10, 100, 250, 400, 600, 900, 1200, 1600, 2000, 2500, 3200, 4500, 6000, 7500, 9000, 12000, 15000, 18000, 22000, 27000, 32000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 120000, 140000, 170000, 200000, 240000, 280000, 330000, 380000, 450000];
 
-var leech = 0;
+let leech = 0;
 
-var collectionradius = 50;
-var collectionbonus = 1;
-var dropchancebonus = 0;
-var shadow = 1;
-var projlifetime = 60;
+let collectionradius = 50;
+let collectionbonus = 1;
+let dropchancebonus = 0;
+let shadow = 1;
+let projlifetime = 60;
 
-var endroundgold = 0;
-var endroundpotatoes = 0;
-var endroundcopper = 0;
-var endroundiron = 0;
+let endroundgold = 0;
+let endroundpotatoes = 0;
+let endroundcopper = 0;
+let endroundiron = 0;
 
-var clickable = false;
-var exclamation = false;
-var buildingex = false;
-var lifelevel = 0;
-var powerlevel = 0;
-var speedlevel = 0;
-var experiencedlevel = 0;
-var impactlevel = 0;
-var agilitylevel = 0;
-var gravitylevel = 0;
-var precisionlevel = 0;
-var points = 0;
+let clickable = false;
+let exclamation = false;
+let buildingex = false;
+let lifelevel = 0;
+let powerlevel = 0;
+let speedlevel = 0;
+let experiencedlevel = 0;
+let impactlevel = 0;
+let agilitylevel = 0;
+let gravitylevel = 0;
+let precisionlevel = 0;
+let points = 0;
 
-var timewarp = 0;
+let timewarp = 0;
 
-var enemies_killed = 0;
+let spawntimer = 0;
+let novatimer = 0;
+let firetimer = 0;
+let gravtimer = 0;
+let attacktimer = 0;
 
-var pierce = 1;
-var pause = 0;
+let enemies_killed = 0;
 
-var weight = 0;
-var multi = 0;
-var buck = 0;
-var knockback = 0;
-var bomb_radius = 0;
-var bomb_damage = 0;
-var fragments = 0;
-var tanks = 0;
+let pierce = 1;
+let pause = 0;
 
-var randomizer = Math.random();
+let weight = 0;
+let multi = 0;
+let buck = 0;
+let knockback = 0;
+let bomb_radius = 0;
+let bomb_damage = 0;
+let fragments = 0;
+let tanks = 0;
 
-var rarityroll = 0;
+let randomizer = Math.random();
 
-var enemyattacks = 0;
+let enemyattacks = 0;
 
-var damagereduced = 0;
+let damagereduced = 0;
 
-var hpbartoggle = 0;
-var infotoggle = 0;
-var resourcetoggle = 1;
-var savebuttontoggle = 0;
-var importtoggle = 0;
-var storetoggle = 1;
-var upgradetoggle = 1;
-var buildingtoggle = 1;
+let hpbartoggle = 0;
+let infotoggle = 0;
+let resourcetoggle = 1;
+let savebuttontoggle = 0;
+let importtoggle = 0;
+let storetoggle = 1;
+let upgradetoggle = 1;
+let buildingtoggle = 1;
 
-var transmutedisplay = 1;
-var smeltdisplay = 1;
-var compressdisplay = 1;
-var pressurizedisplay = 1;
+let transmutedisplay = 1;
+let smeltdisplay = 1;
+let compressdisplay = 1;
+let pressurizedisplay = 1;
 
-var upgrade_1;
-var upgrade_2;
-var upgrade_3;
-var upgrade_4;
-var upgrade_5;
-var upgrade_6;
+let upgrade_1;
+let upgrade_2;
+let upgrade_3;
+let upgrade_4;
+let upgrade_5;
+let upgrade_6;
 
-var cta = 0;
+let cta = 0;
 
-var nav = 1;
+let nav = 1;
 
-var radangle = 0;
-var angularvelocity = 0;
+let radangle = 0;
+let angularvelocity = 0;
 
-var weakened = false;
+let weakened = false;
 
-var incin = 0;
+let incin = 0;
 
-var updated = false;
+let updated = false;
 
 let winnable = true;
 
 let activated = false;
 
-var players;
-var orderedplayers = [];
+let players;
+let orderedplayers = [];
 
-var player = new Player(x, y, 60, 'blue');
+let player = new Player(x, y, 60, 'blue');
 
-var projectile = new Projectile(renderingPosX(player.x), renderingPosY(player.y), 5, 'black', {x:1, y:1}, true, pierce);
-var projectiles = [];
-var enemies = [];
-var enemyprojectiles = [];
+let projectile = new Projectile(renderingPosX(player.x), renderingPosY(player.y), 5, 'black', {x:1, y:1}, true, pierce);
+let projectiles = [];
+let enemies = [];
+let enemyprojectiles = [];
 
-var upgrades = [];
-var ownedBuildings = [];
+let upgrades = [];
+let ownedBuildings = [];
 
-var money = 0;
-var potatoes = 0;
-var copper = 0;
-var iron = 0;
-var titanium = 0;
-var diamond = 0;
-var iridium = 0;
-var essence = 0;
+let money = 0;
+let potatoes = 0;
+let copper = 0;
+let iron = 0;
+let titanium = 0;
+let diamond = 0;
+let iridium = 0;
+let essence = 0;
 
-var gold = [];
-var droppedpotatoes = [];
-var droppedcopper = [];
-var droppediron = [];
-var droppedtitanium = [];
-var droppeddiamond = [];
-var droppediridium = [];
-var droppedessence = [];
+let gold = [];
+let droppedpotatoes = [];
+let droppedcopper = [];
+let droppediron = [];
+let droppedtitanium = [];
+let droppeddiamond = [];
+let droppediridium = [];
+let droppedessence = [];
 
-var abilities = [];
+let abilities = [];
 
-var coppertransmuter = false;
-var smelter = false;
-var compressor = false;
-var pressurizer = false;
-var transmuteinput;
-var smeltinput;
-var compressinput;
-var pressurizerinput;
+let coppertransmuter = false;
+let smelter = false;
+let compressor = false;
+let pressurizer = false;
+let transmuteinput;
+let smeltinput;
+let compressinput;
+let pressurizerinput;
 
-var sandstorm = Math.random();
-var sandstormdirection;
+let sandstorm = Math.random();
+let sandstormdirection;
 
 // var saveobjectstring = JSON.parse(localStorage.getItem('saveobject')) || {};
-var saveobjectstring;
+let saveobjectstring;
 
 if (saveobjectstring) {
     for (let key in saveobjectstring) {
@@ -197,9 +199,9 @@ if (saveobjectstring) {
     }
 }
 
-var frames = 0;
+let frames = 0;
 
-var destructAuraActive = false;
+let destructAuraActive = false;
 
 let keys = {"w": false, "a": false, "s": false, "d": false}
 
@@ -483,8 +485,8 @@ async function submitTime(url, data) {
 
 
 
-var grid = [];
-var minimap = [];
+let grid = [];
+let minimap = [];
 noise.seed(Math.random());
 
 function edgeDist(x, y) {
@@ -602,34 +604,72 @@ function spawnNextStage(stage) {
 	if (stage < 6) {
 		for (let i = 0; i < 100 + stage*6; i++) {
         	if (stage < 40) {
-            	spawnEnemy(Math.random()*10000, Math.random()*10000, 25, (level + 10)*1.06**stage*1.5, (level + 10)*1.06**stage*1.5, Math.floor((level + 10)*1.06**stage/10*1.5), 5, "#FF0000", 1, 75, 75, stage/2)
+            	spawnEnemy(Math.random()*10000, Math.random()*10000, 25, (level + 10)*1.06**stage*1.5, (level + 10)*1.06**stage*1.5, Math.floor((level + 10)*1.06**stage/10*1.5), 5, "#FF0000", 1, 75, 75, stage/2);
         	}
     	}
 	} else if (stage < 11) {
-		for (let i = 0; i < 20 + stage*6; i++) {
+		for (let i = 0; i < 30 + stage*5; i++) {
         	if (stage < 40) {
-            	spawnEnemy(Math.random()*10000, Math.random()*10000, 25, (level + 10)*1.06**stage*1.5, (level + 10)*1.06**stage*1.5, Math.floor((level + 10)*1.06**stage/10*1.5), 5, "#FF0000", 1, 75, 75, stage/2)
+            	spawnEnemy(Math.random()*10000, Math.random()*10000, 25, (level + 10)*1.06**stage*1.5, (level + 10)*1.06**stage*1.5, Math.floor((level + 10)*1.06**stage/10*1.5), 5, "#FF0000", 1, 75, 75, stage/2);
+        	}
+    	}
+	} else if (stage < 16) {
+		for (let i = 0; i < 30 + stage; i++) {
+        	if (stage < 40) {
+            	spawnEnemy(Math.random()*10000, Math.random()*10000, 25, (level + 10)*1.06**stage*3, (level + 10)*1.06**stage*3, Math.floor((level + 10)*1.06**stage/10*3), 5, "#FF0000", 1, 75, 75, stage/1.5);
         	}
     	}
 	}
     
     // x, y, radius, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage
     if (stage > 2) {
-        for (let i = 0; i < 50 + stage*5; i++) {
-            if (stage < 40) {
-                spawnHomingEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.06**stage*1.5, (level + 10)*1.06**stage*1.5, Math.floor(((level + 10)*1.06**stage/10)*1.5), 5, "#800000", 1, 65, 65, stage/2 + 1)
-            }
-        }
+        if (stage < 6) {
+			for (let i = 0; i < 50 + stage*5; i++) {
+            	if (stage < 40) {
+                	spawnHomingEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.06**stage*1.5, (level + 10)*1.06**stage*1.5, Math.floor(((level + 10)*1.06**stage/10)*1.5), 5, "#800000", 1, 65, 65, stage/2 + 1);
+            	}
+        	}	
+		} else if (stage < 11) {
+			for (let i = 0; i < 30 + stage*5; i++) {
+            	if (stage < 40) {
+                	spawnHomingEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.06**stage*1.5, (level + 10)*1.06**stage*1.5, Math.floor(((level + 10)*1.06**stage/10)*1.5), 5, "#800000", 1, 65, 65, stage/2 + 1);
+            	}
+        	}
+		} else if (stage < 16) {
+			for (let i = 0; i < 20 + stage*3; i++) {
+            	if (stage < 40) {
+                	spawnHomingEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.06**stage*3.5, (level + 10)*1.06**stage*3.5, Math.floor(((level + 10)*1.06**stage/10)*3.5), 5, "#800000", 1, 65, 65, stage/1.5 + 1);
+            	}
+        	}
+		}
     }
     
     // x, y, radius, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage, multi
     if (stage > 5) {
-        for (let i = 0; i < 80 + stage*4; i++) {
-            if (stage < 40) {
-                spawnMultiEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.06**stage*1.8, (level + 10)*1.06**stage*1.8, Math.floor((level + 10)*1.06**stage/10*1.8), 5, "#F00000", 1, 75, 75, stage/2, Math.floor(Math.random()*6 + 6))
-            }
-        }
+		if (stage < 11) {
+			for (let i = 0; i < 80 + stage*4; i++) {
+            	if (stage < 40) {
+                	spawnMultiEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.06**stage*1.8, (level + 10)*1.06**stage*1.8, Math.floor((level + 10)*1.06**stage/10*1.8), 5, "#F00000", 1, 75, 75, stage/2, Math.floor(Math.random()*6 + 6));
+            	}
+        	}
+		} else if (stage < 16) {
+			for (let i = 0; i < 60 + stage*3; i++) {
+            	if (stage < 40) {
+                	spawnMultiEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.06**stage*4, (level + 10)*1.06**stage*4, Math.floor((level + 10)*1.06**stage/10*4), 5, "#F00000", 1, 75, 75, stage/1.5, Math.floor(Math.random()*12 + 6));
+            	}
+        	}	
+		}
     }
+	
+	if (stage > 10) {
+		if (stage < 16) {
+			for (let i = 0; i < 30 + stage*6; i++) {
+        		if (stage < 40) {
+            		spawnNovaEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.06**stage*5, (level + 10)*1.06**stage*5, Math.floor((level + 10)*1.06**stage/10*5), 5, "#CC0000", 1, 100, 100, stage/1.5, Math.floor(Math.random()*stage*3 + 30));
+        		}
+    		}
+		}
+	}
 
     // x, y, radius, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage
     if (stage > 1) {
@@ -645,17 +685,6 @@ function spawnNextStage(stage) {
         } 
     }
 
-    
-
-    
-/*
-for (let i = 0; i < 30 + stage*6; i++) {
-        if (stage < 40) {
-            spawnNovaEnemy(Math.random()*10000, Math.random()*10000, 35, (level + 10)*1.06**stage, (level + 10)*1.06**stage, Math.floor((level + 10)*1.06**stage/10), 5, "#F00000", 1, 75, 75, stage/2, 50)
-        }
-    }
-
-*/
 	if (stage % 5 != 0) {
 		spawnSuperBoss(9999, 9999, 150, (level + 10)*1.06**stage*180*Math.floor(1 + stage/10), (level + 10)*1.06**stage*180*Math.floor(1 + stage/10), Math.floor((level + 10)*1.06**stage*9*Math.floor(1 + stage/10)), 15, "#00F000", 1, 10, 10, stage/2)
 	} else {
@@ -676,7 +705,7 @@ function radiusboost() {
 }
 
 function drboost() {
-    damagereduced += 80;
+    damagereduced += 8;
 }
 
 function buildtransmute() {
@@ -758,9 +787,17 @@ function newStage() {
         exclamation = true;
         upgrades.push(new Upgrade("Copper Transmuter", "A building that allows you to turn gold into copper.", 800, 200, 150, 100, 0, 0, 0, 1, buildtransmute))
     }
+	if (stage == 7) {
+        exclamation = true;
+        upgrades.push(new Upgrade("Armored II", "Enemy damage reduced by an additional 8%.", 400, 900, 200, 200, 0, 0, 0, 1, drboost))
+    }
 	if (stage == 8) {
         exclamation = true;
         upgrades.push(new Upgrade("Iron Smelter", "A building that allows you to turn gold and copper into iron.", 900, 300, 200, 200, 100, 0, 0, 1, buildsmelter))
+    }
+	if (stage == 9) {
+        exclamation = true;
+        upgrades.push(new Upgrade("Life leech II", "Every time you hit your enemies, you heal for an additional 3% of your dealt damage.", 750, 600, 100, 100, 0, 0, 0, 1, leechboost))
     }
 	if (stage == 10) {
         exclamation = true;
@@ -772,7 +809,7 @@ function newStage() {
     }
 	if (stage == 14) {
         exclamation = true;
-        upgrades.push(new Upgrade("Destruction I", "Each hit on an enemy takes off 0.1% of their current life.", 1200, 900, 800, 800, 600, 100, 0, 1, destructionboost))
+        upgrades.push(new Upgrade("Destruction I", "Each hit on an enemy takes off 0.1% of their current life.", 1200, 600, 600, 600, 600, 100, 0, 1, destructionboost))
     }
     
     if (stage === 25 && weakened === false) {
@@ -785,24 +822,21 @@ function newStage() {
     player.y = canvas.height / 2;
 	
 	if (stage > 1) {
-		endroundgold = Math.floor((30 + stage*20*Math.random())*Math.random() + 30);
-		endroundpotatoes = Math.floor(((30 + stage*20*Math.random())*Math.random() + 30)/2);
+		endroundgold = Math.floor((30 + (stage + level)*30*Math.random())*Math.random() + 30);
+		endroundpotatoes = Math.floor(((30 + (stage + level)*30*Math.random())*Math.random() + 30)/2);
 	}
 	
 	if (stage > 2) {
-		endroundcopper = Math.floor(((30 + stage*30*Math.random())*Math.random() + 30)/5);
+		endroundcopper = Math.floor(((30 + (stage + level)*30*Math.random())*Math.random() + 30)/3);
 	}
 	if (stage > 5) {
-		endroundiron = Math.floor(((30 + stage*32*Math.random())*Math.random() + 30)/7);
+		endroundiron = Math.floor(((30 + (stage + level)*30*Math.random())*Math.random() + 30)/4);
 	}
 	
 	money += endroundgold;
 	potatoes += endroundpotatoes;
 	copper += endroundcopper;
 	iron += endroundiron;
-	
-	
-	
 	
     if (stage <= 40) {
         spawnNextStage(stage)
@@ -851,9 +885,6 @@ addEventListener("keydown", event => {
     })
 })
 
-
-
-
 // decrease cooldown of abilities after each second
 setInterval(() => {
     abilities.forEach((ability, indexa) => {
@@ -864,41 +895,6 @@ setInterval(() => {
         }
     })
 }, 1000)
-
-// spray boss novas periodically on superboss levels
-setInterval(() => {
-    enemies.forEach((enemy) => {
-        if (enemy.isSuperBoss === true) {
-            bossnova(enemy, 10 + stage*2, 100 + stage*4)
-        }
-    })
-}, 6000 - stage*10)
-
-
-// spray firearcs periodically
-setInterval(() => {
-    if (upgrade_6 === "incinerator4") {
-        firearc(140)
-    } else if (upgrade_5 === "incinerator3") {
-        firearc(90)
-    }
-}, 7000)
-
-// regenerate gravitational armor periodically
-setInterval(() => {
-    if (upgrade_1 === "heavy" && projectiles.length < 10 + gravitylevel*2 && pause % 2 === 0) {
-        regengravity(1 + 0.4*gravitylevel, 100 + Math.random()*500)
-    }
-}, 1000 - gravitylevel*10)
-
-// refresh enemy attacks to limit melee damage done by enemies
-setInterval(() => {
-    enemyattacks = 0;
-}, 50)
-
-setInterval(() => {
-    updated = false;
-}, 100)
 
 setInterval(() => {
     winnable = true

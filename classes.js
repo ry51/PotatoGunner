@@ -22,7 +22,7 @@ class Player {
         if (incin === 1) {
             const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
             const velocity = {x:Math.cos(angle)*8, y:Math.sin(angle)*8}
-            projectiles.push(new Projectile(this.x, this.y, 5+3*weight, "#000000", velocity, pierce, true, false))
+            projectiles.push(new Projectile(this.x, this.y, 5+3*weight, "#FF9900", velocity, pierce, true, false))
         } else if (fragments > 0) {
             const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
             const velocity = {x:Math.cos(angle)*8, y:Math.sin(angle)*8}

@@ -1,5 +1,8 @@
 function animate() {
     requestAnimationFrame(animate);
+	
+	enemyattacks = 0;
+	updated = false;
 
 	if (pause % 2 === 0) {
 		frames += 1;
@@ -53,11 +56,29 @@ function animate() {
 				ss = 0;	
 				changess();
 			}
-		}
-		
+		}	
 	}
 	
+	if (upgrade_4 === "incinerator2") {
+		firetimer += 1;
+		if (firetimer > 400) {
+			if (upgrade_6 === "incinerator4") {
+				firearc(150);	
+			} else if (upgrade_5 === "incinerator3") {
+				firearc(100);	
+			} else {
+				firearc(50);	
+			}
+			firetimer = 0;
+		}
+	}
 	
+	if (upgrade_1 === "heavy" && projectiles.length < 10 + gravitylevel*2 && pause % 2 === 0) {
+        gravtimer += 1;
+		if (gravtimer > (20 - gravitylevel/5)) {
+			regengravity(1 + 0.4*gravitylevel, 100 + Math.random()*500);	
+		}
+    }
 	
 	let tilex = Math.min(99, Math.max(0, Math.floor(player.x / 100)));
 	let tiley = Math.min(99, Math.max(0, Math.floor(player.y / 100)));
@@ -67,6 +88,10 @@ function animate() {
 		freezemultiplier = 0.6;
 	} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#0055B3") {
 		freezemultiplier = 0.8;
+	} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#CEE8F0") {
+		freezemultiplier = 0.95;
+	} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#ADD8E6") {
+		freezemultiplier = 0.9;
 	} else {
 		freezemultiplier = 1;	
 	}
@@ -112,6 +137,21 @@ function animate() {
             ctx.arc(canvas.width - 250 + enemy.x / 50, canvas.height - 250 + enemy.y / 50, 6, 0, Math.PI*2, true);
             ctx.fill();
             ctx.closePath();
+
+			if (Math.hypot(enemy.x - player.x, enemy.y - player.y) < 800) {
+				novatimer += 1;
+				if (novatimer > (360 - stage*2)) {
+					novatimer = 0;
+					bossnova(enemy, 10 + stage*2, 100 + stage*4);
+				}
+			}
+			if (stage === 10 && Math.hypot(enemy.x - player.x, enemy.y - player.y) < 800) {
+				spawntimer += 1;
+				if (spawntimer > 30) {
+					spawntimer = 0;
+					spawnEnemy(enemy.x + Math.random()*800 - 400, enemy.y + Math.random()*800 - 400, 25, 75, 75, 0, 5, "#FF0000", 1, 60, 60, 6);
+				}
+			}
         } else if (enemy.isBoss === true) {
             ctx.fillStyle = "#000000"
             ctx.beginPath()
@@ -486,7 +526,7 @@ function animate() {
                     }
 
                     enemies[index].health -= damage*bossmultiplier;
-                    health += damage*bossmultiplier*leech/100/Math.log(stage+1);
+                    health += damage*bossmultiplier*leech/100/Math.log(stage+1)/Math.log(stage+1);
                     if (health > maxhealth) {
                         health = maxhealth;
                     }
@@ -495,7 +535,7 @@ function animate() {
                         enemies[index].health *= (1-0.001*impactlevel);
                     }
                     enemies[index].health -= damage
-                    health += damage*leech/100/Math.log(stage+1);
+                    health += damage*leech/100/Math.log(stage+1)/Math.log(stage+1);
                     if (health > maxhealth) {
                         health = maxhealth;
                     }
@@ -834,43 +874,43 @@ function animate() {
     } else {
         if (level >= 3) {
             ctx.font = "30px Courier New"
-            ctx.fillText(`LIFE [z] [${lifelevel}]`, 80, 440)
+            ctx.fillText(`LIFE [z]  Level: ${lifelevel}`, 80, 440)
             ctx.font = "20px Courier New"
             ctx.fillText("Increases your health by a stacking 10%.", 80, 460)
         }
         if (level >= 4) {
             ctx.font = "30px Courier New"
-            ctx.fillText(`POWER [x] [${powerlevel}]`, 80, 510)
+            ctx.fillText(`POWER [x]  Level: ${powerlevel}`, 80, 510)
             ctx.font = "20px Courier New"
             ctx.fillText("Increases your damage by a stacking 5%.", 80, 530)
         }
         if (level >= 5) {
             ctx.font = "30px Courier New"
-            ctx.fillText(`SPEED [c] [${speedlevel}]`, 80, 580)
+            ctx.fillText(`SPEED [c]  Level: ${speedlevel}`, 80, 580)
             ctx.font = "20px Courier New"
             ctx.fillText("Increases your speed by a stacking 10%.", 80, 600)
         }
         if (level >= 8) {
             ctx.font = "30px Courier New"
-            ctx.fillText(`EXPERIENCED [v] [${experiencedlevel}]`, 80, 650)
+            ctx.fillText(`EXPERIENCED [v]  Level: ${experiencedlevel}`, 80, 650)
             ctx.font = "20px Courier New"
             ctx.fillText("Increases experience gained by a stacking 5%.", 80, 670)
         }
         if (upgrade_1 === "heavy") {
             ctx.font = "30px Courier New"
-            ctx.fillText(`GRAVITY [b] [${gravitylevel}]`, 80, 720)
+            ctx.fillText(`GRAVITY [b]  Level: ${gravitylevel}`, 80, 720)
             ctx.font = "20px Courier New"
             ctx.fillText("Increases speed, regen speed, and projectile count of rotating projectiles.", 80, 740)
         }
         if (upgrade_1 === "multishot") {
             ctx.font = "30px Courier New"
-            ctx.fillText(`PRECISION [b] [${precisionlevel}]`, 80, 720)
+            ctx.fillText(`PRECISION [b] Level: ${precisionlevel}`, 80, 720)
             ctx.font = "20px Courier New"
             ctx.fillText("Makes multishot projectiles much more accurate.", 80, 740)
         }
         if (level >= 15 && upgrade_3 === "magic") {
             ctx.font = "30px Courier New"
-            ctx.fillText(`AGILITY [b] [${agilitylevel}]`, 80, 720)
+            ctx.fillText(`AGILITY [b] Level: ${agilitylevel}`, 80, 720)
             ctx.font = "20px Courier New"
             ctx.fillText("Decrease cooldown of Destructive Aura by a compounding 5%.", 80, 740)
         }
@@ -896,9 +936,9 @@ function animate() {
         }
         if (stage === 1) {
             ctx.font = "20px Courier New"
-            ctx.fillText("v2.0.4 new features:", 200, 270)
+            ctx.fillText("v2.0.5 new features:", 200, 270)
             ctx.fillText("Added buildings", 200, 290)
-            ctx.fillText("Added desert terrain mechanics", 200, 310)
+            ctx.fillText("Added mountain terrain mechanics", 200, 310)
             ctx.fillText("Reworked enemy scaling and leech scaling", 200, 330)
             ctx.font = "40px Courier New"
             ctx.fillText("Rules:", 200, 400)
@@ -907,9 +947,9 @@ function animate() {
             ctx.fillText("the direction of shooting with your mouse. Defeat the boss of each stage to move", 200, 452);
             ctx.fillText("onto the next (bosses are highlighted for you on the minimap in red). You will get xp", 200, 468);
             ctx.fillText("by killing enemies, and when you reach a breakpoint, a level will be gained. Using xp", 200, 484);
-            ctx.fillText("you can upgrade your character by clicking the upgrade's respective hotkey.", 200, 500);
-            ctx.fillText("Pressing K toggles this menu. Spacebar pauses/unpauses the game. As you progress, you", 200, 516);
-            ctx.fillText("will gain various resources. You can press L to toggle the resource info menu.", 200, 532);
+            ctx.fillText("you can upgrade your character by clicking the upgrade's respective hotkey (hotkeys in this", 200, 500);
+            ctx.fillText("game are represented with square brackets, so for example [K] means to click the hotkey K).", 200, 516);
+            ctx.fillText("As you kill enemies, you will gain various resources. You can press L to toggle the resource menu.", 200, 532);
             ctx.fillText("Good luck!", 200, 580);
         } else if (stage === 2) {
             ctx.font = "20px Courier New"
@@ -933,16 +973,16 @@ function animate() {
         } else if (stage === 5) {
             ctx.font = "20px Courier New"
             ctx.fillText("New Content!", 200, 270)
-            ctx.fillText("Every 5 levels, a MEGABOSS will spawn instead of a normal level boss. MEGABOSSES have special", 200, 290)
-			ctx.fillText("modifiers as well as extra health and damage, but drop more experience and loot.", 200, 310)
+            ctx.fillText("Every 5 levels, a MEGABOSS will spawn instead of a normal level boss. MEGABOSSES have special", 200, 290);
+			ctx.fillText("modifiers as well as extra health and damage, but drop more experience and loot.", 200, 310);
 			ctx.font = "15px Courier New"
             ctx.fillText("The level 5 MEGABOSS spawns with the MULTISHOT modifier, making it spray a lot more", 200, 436);
 			ctx.fillText("projectiles than normal.", 200, 452);
         } else if (stage === 6) {
             ctx.font = "20px Courier New"
             ctx.fillText("New Content!", 200, 270)
-            ctx.fillText("Welcome to the desert! This new terrain brings various benefits and hinderences.", 200, 290)
-			ctx.fillText("MULTISHOT enemies now spawn. They will shoot a barrage of bullets at you.", 200, 310)
+            ctx.fillText("Welcome to the desert! This new terrain brings various benefits and hinderences.", 200, 290);
+			ctx.fillText("MULTISHOT enemies now spawn. They will shoot a barrage of bullets at you.", 200, 310);
 			ctx.font = "15px Courier New"
             ctx.fillText("You have unlocked BUILDINGS! To unlock a building, you need to research it in the upgrades", 200, 436);
 			ctx.fillText("tab. Buildings allow you to turn less valuable resources into more valuable resources.", 200, 452);
@@ -950,13 +990,26 @@ function animate() {
             ctx.fillText("sandstorms actually cause you quite a bit of trouble. You will be blown in a random direction", 200, 484);
             ctx.fillText("(either up, down, left, or right) that will constantly change about once every 15-20 seconds.", 200, 500);
             ctx.fillText("Be careful!", 200, 516);
+        } else if (stage === 6) {
+			ctx.font = "15px Courier New"
+            ctx.fillText("Don't worry if you feel overwhelmed by upgrades. The game doesn't mean for you to purchase", 200, 436);
+			ctx.fillText("every upgrade, but to give you choice as to what stats you want to boost.", 200, 452);
         } else if (stage === 10) {
 			ctx.font = "15px Courier New"
-            ctx.fillText("You have unlocked BUILDINGS! To unlock a building, you need to research it in the upgrades", 200, 436);
-			ctx.fillText("tab. Buildings allow you to turn less valuable resources into more valuable resources.", 200, 452);
-            ctx.fillText("Strong winds in the desert terrain cause SANDSTORMS to occur. You're not very stong yet, so", 200, 468);
-            ctx.fillText("sandstorms actually cause you quite a bit of trouble. You will be blown in a random direction", 200, 484);
-            ctx.fillText("(either up, down, left, or right) that will constantly change about once every 15-20 seconds.", 200, 500);
+            ctx.fillText("This MEGABOSS on stage 10 has the SUMMONING modifier. It will spawn many enemies to protect it,", 200, 436);
+			ctx.fillText("making it much harder to hit as well as having minions to deal damage. Adding to your troubles,", 200, 452);
+            ctx.fillText("every 10 stages bosses will gain an additional +100% health.", 200, 468);
+            ctx.fillText("Be careful!", 200, 516);
+        } else if (stage === 11) {
+            ctx.font = "20px Courier New"
+            ctx.fillText("New Content!", 200, 270)
+            ctx.fillText("Welcome to the mountain! This new terrain brings various benefits and hinderences.", 200, 290);
+			ctx.fillText("NOVA enemies now spawn. They will shoot a ring of bullets at you, so don't stand overtop", 200, 310);
+			ctx.fillText("of them or you will get destroyed.", 200, 330);
+			ctx.font = "15px Courier New"
+            ctx.fillText("You feel relieved that there are no more sandstorm winds or that there are no more bodies", 200, 436);
+			ctx.fillText("of water to hinder movement speed. However, you have noticed that the enemies here are much", 200, 452);
+            ctx.fillText("stronger than usual. You will need to be careful if you want to stay alive.", 200, 468);
             ctx.fillText("Be careful!", 200, 516);
         }
 		

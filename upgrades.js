@@ -85,7 +85,7 @@ function explosive2() {
     bomb_damage *= 2;
 }
 function incinerator() {
-    damage /= 4;
+    damage /= 6;
     reload_time = 1;
     incin = 1;
     projlifetime = 25;
