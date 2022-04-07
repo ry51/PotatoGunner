@@ -46,4 +46,16 @@ Increased resource drop amount
 
 Gameplay complete to stage 10
 
+## V2.0.5
+
+Reworked enemy scaling for different types of enemies (when more enemy types are introduced, previous enemies lessen)
+
+Further nerfed leech (3%/ln(stage+1) -> 3%/(ln(stage+1)^2)
+
+Increased boss resource drops
+
+Gameplay (somewhat) complete to stage 15
+
+
+
 
