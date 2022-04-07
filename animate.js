@@ -896,10 +896,10 @@ function animate() {
         }
         if (stage === 1) {
             ctx.font = "20px Courier New"
-            ctx.fillText("v2.0.3 new features:", 200, 270)
+            ctx.fillText("v2.0.4 new features:", 200, 270)
             ctx.fillText("Added buildings", 200, 290)
             ctx.fillText("Added desert terrain mechanics", 200, 310)
-            ctx.fillText("Currently reworking everything", 200, 330)
+            ctx.fillText("Reworked enemy scaling and leech scaling", 200, 330)
             ctx.font = "40px Courier New"
             ctx.fillText("Rules:", 200, 400)
             ctx.font = "15px Courier New"
