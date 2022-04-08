@@ -56,6 +56,16 @@ Increased boss resource drops
 
 Gameplay (somewhat) complete to stage 15
 
+## V2.0.6
+
+Reworked superboss scaling
+
+Added more upgrades
+
+Reworked upgrade costs so buildings are more worthwhile
+
+Ice terrain and enemies are still bugged
+
 
 
 
