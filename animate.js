@@ -18,27 +18,52 @@ function animate() {
     ctx.lineWidth = 6;
     ctx.strokeStyle = "black";
     ctx.stroke();
+	
+	if (stage < 16 || stage > 20) {
+		for (let x = 0; x < grid.length; x++) {
+        	for (let y = 0; y < grid[x].length; y++) {
+            	if (renderingPosX(100 * x) < - 100 || renderingPosX(100 * x) > canvas.width + 100 || renderingPosY(100 * y) < -100 || renderingPosY(100 * y) > canvas.height + 100) {
+                	continue;
+            	}  
+            	ctx.fillStyle = getColor(grid[x][y]*(edgeDist(x, y)/25000));
+            	ctx.fillRect(renderingPosX(100 * x), renderingPosY(100 * y), 101, 101);
+        	}
+    	}
+	} else {
+		for (let x = 0; x < grid.length; x++) {
+        	for (let y = 0; y < grid[x].length; y++) {
+            	if (renderingPosX(100 * x) < - 100 || renderingPosX(100 * x) > canvas.width + 100 || renderingPosY(100 * y) < -100 || renderingPosY(100 * y) > canvas.height + 100) {
+                	continue;
+            	}  
+            	ctx.fillStyle = getColor(grid[x][y]/850);
+            	ctx.fillRect(renderingPosX(100 * x), renderingPosY(100 * y), 101, 101);
+        	}
+    	}
+	}
    
    
-    for (let x = 0; x < grid.length; x++) {
-        for (let y = 0; y < grid[x].length; y++) {
-            if (renderingPosX(100 * x) < - 100 || renderingPosX(100 * x) > canvas.width + 100 || renderingPosY(100 * y) < -100 || renderingPosY(100 * y) > canvas.height + 100) {
-                continue;
-            }  
-            ctx.fillStyle = getColor(grid[x][y]*(edgeDist(x, y)/25000));
-            ctx.fillRect(renderingPosX(100 * x), renderingPosY(100 * y), 101, 101);
-        }
-    }
+    
 
     ctx.fillStyle = "#000000";
     ctx.fillRect(canvas.width - 252, canvas.height - 252, 204, 204);
 
-    for (let x = 0; x < grid.length; x += 2) {
-        for (let y = 0; y < grid[x].length; y += 2) {
-            ctx.fillStyle = getColor(grid[x][y]*(edgeDist(x, y)/25000));
-            ctx.fillRect(canvas.width - 250 + 2*x, canvas.height - 250 + 2*y, 4, 4);
-        }
-    }
+	if (stage < 16 || stage > 20) {
+		for (let x = 0; x < grid.length; x += 2) {
+        	for (let y = 0; y < grid[x].length; y += 2) {
+            	ctx.fillStyle = getColor(grid[x][y]*(edgeDist(x, y)/25000));
+            	ctx.fillRect(canvas.width - 250 + 2*x, canvas.height - 250 + 2*y, 4, 4);
+        	}
+    	}
+	} else {
+		for (let x = 0; x < grid.length; x += 2) {
+        	for (let y = 0; y < grid[x].length; y += 2) {
+            	ctx.fillStyle = getColor(grid[x][y]/850);
+            	ctx.fillRect(canvas.width - 250 + 2*x, canvas.height - 250 + 2*y, 4, 4);
+        	}
+    	}
+	}
+	
+    
 	
 	if (stage > 5 && stage < 11) {
 		if (pause % 2 === 0) {
@@ -83,18 +108,38 @@ function animate() {
 	let tilex = Math.min(99, Math.max(0, Math.floor(player.x / 100)));
 	let tiley = Math.min(99, Math.max(0, Math.floor(player.y / 100)));
 	
-	
-	if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#003166") {
-		freezemultiplier = 0.6;
-	} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#0055B3") {
-		freezemultiplier = 0.8;
-	} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#CEE8F0") {
-		freezemultiplier = 0.95;
-	} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#ADD8E6") {
-		freezemultiplier = 0.9;
+	if (stage < 16 || stage > 20) {
+		if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#003166") {
+			freezemultiplier = 0.6;
+		} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#0055B3") {
+			freezemultiplier = 0.8;
+		} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#CEE8F0") {
+			freezemultiplier = 0.95;
+		} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#ADD8E6") {
+			freezemultiplier = 0.9;
+		} else {
+			freezemultiplier = 1;	
+		}
 	} else {
-		freezemultiplier = 1;	
+		if (getColor(grid[tilex][tiley]/850) == "#273F87") {
+			freezemultiplier = 0.5;
+		} else if (getColor(grid[tilex][tiley]/850) == "#3454B4") {
+			freezemultiplier = 0.6;
+		} else if (getColor(grid[tilex][tiley]/850) == "#3B5FCD") {
+			freezemultiplier = 0.7;
+		} else if (getColor(grid[tilex][tiley]/850) == "#BDE0EB") {
+			freezemultiplier = 1.5;
+		} else if (getColor(grid[tilex][tiley]/850) == "#CEE8F0") {
+			freezemultiplier = 1.6;
+		} else if (getColor(grid[tilex][tiley]/850) == "#DEEFF5") {
+			freezemultiplier = 1.7;
+		} else {
+			freezemultiplier = 2;	
+		}
 	}
+	
+	
+	
    
 
     if (hpbartoggle % 2 == 0) {
@@ -152,6 +197,11 @@ function animate() {
 					spawnEnemy(enemy.x + Math.random()*800 - 400, enemy.y + Math.random()*800 - 400, 25, 75, 75, 0, 5, "#FF0000", 1, 60, 60, 6);
 				}
 			}
+			
+			if (stage === 15) {
+				enemy.health += 2;	
+			}
+			
         } else if (enemy.isBoss === true) {
             ctx.fillStyle = "#000000"
             ctx.beginPath()
@@ -400,8 +450,11 @@ function animate() {
     enemyprojectiles.forEach((enemyprojectile, indexe) => {
         const distance = Math.hypot(enemyprojectile.x - player.x, enemyprojectile.y - player.y)
         if (distance - player.radius < 0) {
-                    health -= enemyprojectiles[indexe].damage*(1-damagereduced/100);
-                    enemyattacks += 1;
+            health -= enemyprojectiles[indexe].damage*(1-damagereduced/100);
+            enemyattacks += 1;
+			if (enemyprojectile.isFreezing == true) {
+				freeze(0.3);
+			}
             if (health <= 0) {
                 if (pause % 2 === 0) {
                     pause += 1;
@@ -590,7 +643,7 @@ function animate() {
     ctx.fillText("Level: " + level, 60, 105)
     ctx.fillText("Health: " + Math.floor(health), 60, 140)
     ctx.fillText("Damage: " + Math.floor(damage), 60, 175)
-	if (freezemultiplier < 1) {
+	if (freezemultiplier != 1) {
 		ctx.fillStyle = "#CC0000";
 		ctx.fillText("Speed: " + Math.floor(speed*10*freezemultiplier)/10, 60, 210)	
 	} else {
@@ -999,7 +1052,6 @@ function animate() {
             ctx.fillText("This MEGABOSS on stage 10 has the SUMMONING modifier. It will spawn many enemies to protect it,", 200, 436);
 			ctx.fillText("making it much harder to hit as well as having minions to deal damage. Adding to your troubles,", 200, 452);
             ctx.fillText("every 10 stages bosses will gain an additional +100% health.", 200, 468);
-            ctx.fillText("Be careful!", 200, 516);
         } else if (stage === 11) {
             ctx.font = "20px Courier New"
             ctx.fillText("New Content!", 200, 270)
@@ -1010,7 +1062,23 @@ function animate() {
             ctx.fillText("You feel relieved that there are no more sandstorm winds or that there are no more bodies", 200, 436);
 			ctx.fillText("of water to hinder movement speed. However, you have noticed that the enemies here are much", 200, 452);
             ctx.fillText("stronger than usual. You will need to be careful if you want to stay alive.", 200, 468);
-            ctx.fillText("Be careful!", 200, 516);
+        } else if (stage === 15) {
+			ctx.font = "15px Courier New"
+            ctx.fillText("This MEGABOSS on stage 15 has the BELLIGERENT modifier. It will attack fast and deal extra,", 200, 436);
+			ctx.fillText("damage. Its novas are also much more frequent. The boss will also heal health passively, so", 200, 452);
+            ctx.fillText("make sure you kill it quick!", 200, 468);
+        } else if (stage === 16) {
+			/*
+			ctx.font = "20px Courier New"
+            ctx.fillText("New Content!", 200, 270)
+            ctx.fillText("Welcome to the tundra! This new terrain brings various benefits and hinderences.", 200, 290);
+			ctx.fillText("ICE enemies now spawn. They will shoot a freezing bullet, making you less mobile and shoot", 200, 310);
+			ctx.fillText("slower.", 200, 330);
+			ctx.font = "15px Courier New"
+            ctx.fillText("In this new terrain, your mobility is greatly challenged. When on ice, you will move much faster", 200, 436);
+			ctx.fillText("than usual but movement is harder to control. When in a water puddle, you will move much slower", 200, 452);
+            ctx.fillText("just like when you're normally in water.", 200, 468);
+			*/
         }
 		
 		ctx.font = "15px Courier New"
@@ -1237,134 +1305,266 @@ function animate() {
 			ctx.font = "25px Courier New"
 			ctx.fillText("No upgrades available", 200, 220);
 		}
-
-        for (let i = 0; i < upgrades.length; i++) {
-            ctx.font = "25px Courier New"
-			if (money >= upgrades[i].costau && potatoes >= upgrades[i].costp && copper >= upgrades[i].costcu && iron >= upgrades[i].costfe && titanium >= upgrades[i].costti && diamond >= upgrades[i].costd && iridium >= upgrades[i].costir && essence >= upgrades[i].coste) {
-				ctx.fillStyle = "black";
-			} else {
-				ctx.fillStyle = "#800000";
-			}
-            ctx.fillText(upgrades[i].name + "    [" + (i + 4) + "]", 200, 220 + 100*i);
-            ctx.font = "20px Courier New";
-            ctx.fillText(upgrades[i].description, 205, 250 + 100*i);
+		
+		if (upgrades.length > 6) {
+			for (let i = 0; i < 6; i++) {
+            	ctx.font = "25px Courier New"
+				if (money >= upgrades[i].costau && potatoes >= upgrades[i].costp && copper >= upgrades[i].costcu && iron >= upgrades[i].costfe && titanium >= upgrades[i].costti && diamond >= upgrades[i].costd && iridium >= upgrades[i].costir && essence >= upgrades[i].coste) {
+					ctx.fillStyle = "black";
+				} else {
+					ctx.fillStyle = "#800000";
+				}
+            	ctx.fillText(upgrades[i].name + "    [" + (i + 4) + "]", 200, 220 + 100*i);
+            	ctx.font = "20px Courier New";
+            	ctx.fillText(upgrades[i].description, 205, 250 + 100*i);
             
 
-            let costdist = 0;
+            	let costdist = 0;
 
-            if (upgrades[i].costau > 0) {
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#000000";
-                ctx.fill()
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#FFFF00";
-                ctx.fill();
+            	if (upgrades[i].costau > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#FFFF00";
+                	ctx.fill();
 
-                ctx.fillStyle = "#000000";
-                ctx.fillText(upgrades[i].costau, 230 + costdist*100, 290 + 100*i);
-                costdist += 1;
-            }
-            if (upgrades[i].costp > 0) {
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#000000";
-                ctx.fill()
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#B79628";
-                ctx.fill();
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costau, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].costp > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#B79628";
+                	ctx.fill();
 
-                ctx.fillStyle = "#000000";
-                ctx.fillText(upgrades[i].costp, 230 + costdist*100, 290 + 100*i);
-                costdist += 1;
-            }
-            if (upgrades[i].costcu > 0) {
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#000000";
-                ctx.fill()
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#B87333";
-                ctx.fill();
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costp, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].costcu > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#B87333";
+                	ctx.fill();
 
-                ctx.fillStyle = "#000000";
-                ctx.fillText(upgrades[i].costcu, 230 + costdist*100, 290 + 100*i);
-                costdist += 1;
-            }
-            if (upgrades[i].costfe > 0) {
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#000000";
-                ctx.fill()
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#A19D94";
-                ctx.fill();
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costcu, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].costfe > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#A19D94";
+                	ctx.fill();
 
-                ctx.fillStyle = "#000000";
-                ctx.fillText(upgrades[i].costfe, 230 + costdist*100, 290 + 100*i);
-                costdist += 1;
-            }
-            if (upgrades[i].costti > 0) {
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#000000";
-                ctx.fill()
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#2E4A9E";
-                ctx.fill();
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costfe, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].costti > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#2E4A9E";
+                	ctx.fill();
 
-                ctx.fillStyle = "#000000";
-                ctx.fillText(upgrades[i].costti, 230 + costdist*100, 290 + 100*i);
-                costdist += 1;
-            }
-            if (upgrades[i].costd > 0) {
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#000000";
-                ctx.fill()
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#D9E1F9";
-                ctx.fill();
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costti, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].costd > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#D9E1F9";
+                	ctx.fill();
 
-                ctx.fillStyle = "#000000";
-                ctx.fillText(upgrades[i].costd, 230 + costdist*100, 290 + 100*i);
-                costdist += 1;
-            }
-            if (upgrades[i].costir > 0) {
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#000000";
-                ctx.fill()
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#393339";
-                ctx.fill();
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costd, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].costir > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#393339";
+                	ctx.fill();
 
-                ctx.fillStyle = "#000000";
-                ctx.fillText(upgrades[i].costir, 230 + costdist*100, 290 + 100*i);
-                costdist += 1;
-            }
-            if (upgrades[i].coste > 0) {
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#000000";
-                ctx.fill()
-                ctx.beginPath()
-                ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
-                ctx.fillStyle = "#FFFFFF";
-                ctx.fill();
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costir, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].coste > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#FFFFFF";
+                	ctx.fill();
                 
-                ctx.fillStyle = "#000000";
-                ctx.fillText(upgrades[i].coste, 230 + costdist*100, 290 + 100*i);
-                costdist += 1;
-            }
-        }
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].coste, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+        	}
+		} else {
+			for (let i = 0; i < upgrades.length; i++) {
+            	ctx.font = "25px Courier New"
+				if (money >= upgrades[i].costau && potatoes >= upgrades[i].costp && copper >= upgrades[i].costcu && iron >= upgrades[i].costfe && titanium >= upgrades[i].costti && diamond >= upgrades[i].costd && iridium >= upgrades[i].costir && essence >= upgrades[i].coste) {
+					ctx.fillStyle = "black";
+				} else {
+					ctx.fillStyle = "#800000";
+				}
+            	ctx.fillText(upgrades[i].name + "    [" + (i + 4) + "]", 200, 220 + 100*i);
+            	ctx.font = "20px Courier New";
+            	ctx.fillText(upgrades[i].description, 205, 250 + 100*i);
+            
+
+            	let costdist = 0;
+
+            	if (upgrades[i].costau > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#FFFF00";
+                	ctx.fill();
+
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costau, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].costp > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#B79628";
+                	ctx.fill();
+
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costp, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].costcu > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#B87333";
+                	ctx.fill();
+
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costcu, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].costfe > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#A19D94";
+                	ctx.fill();
+
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costfe, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].costti > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#2E4A9E";
+                	ctx.fill();
+
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costti, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].costd > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#D9E1F9";
+                	ctx.fill();
+
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costd, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].costir > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#393339";
+                	ctx.fill();
+
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].costir, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+            	if (upgrades[i].coste > 0) {
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 11, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#000000";
+                	ctx.fill()
+                	ctx.beginPath()
+                	ctx.arc(200 + 100*costdist, 280 + 100*i, 10, 0, Math.PI * 2, false);
+                	ctx.fillStyle = "#FFFFFF";
+                	ctx.fill();
+                
+                	ctx.fillStyle = "#000000";
+                	ctx.fillText(upgrades[i].coste, 230 + costdist*100, 290 + 100*i);
+                	costdist += 1;
+            	}
+        	}
+		}
+
+        
         ctx.font = "25px Courier New";
         ctx.fillStyle = "#000000";
         ctx.fillText("[M] to close menu", 200, canvas.height - 180);
@@ -1381,9 +1581,9 @@ function animate() {
 		ctx.font = "25px Courier New";
         ctx.fillStyle = "#000000";
 		ctx.fillText("[N] to close menu", 200, canvas.height - 180);
+		
 		if (coppertransmuter == true) {
 			document.getElementById("transmuter").style.display = "initial";	
-			
 		}
 		if (smelter == true) {
 			document.getElementById("smelter").style.display = "initial";		
@@ -1394,12 +1594,18 @@ function animate() {
 		if (pressurizer == true) {
 			document.getElementById("pressurizer").style.display = "initial";		
 		}
-		
+		if (synthesizer == true) {
+			document.getElementById("synthesizer").style.display = "initial";		
+		}
+		if (vaporizer == true) {
+			document.getElementById("vaporizer").style.display = "initial";		
+		}
 	} else {
 		document.getElementById("transmuter").style.display = "none";
 		document.getElementById("smelter").style.display = "none";	
 		document.getElementById("compressor").style.display = "none";	
 		document.getElementById("pressurizer").style.display = "none";
+		document.getElementById("synthesizer").style.display = "none";
+		document.getElementById("vaporizer").style.display = "none";
 	}
-	
 }

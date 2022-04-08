@@ -54,7 +54,11 @@ class Player {
 
     update() {
         if (pause % 2 === 0) {
-            this.reloadTime--
+			if (frozen == false) {
+				this.reloadTime--
+			} else {
+				this.reloadTime -= 0.4;	
+			}
         }
         if (this.reloadTime <= 0 && pause % 2 === 0) {
             this.shoot()
@@ -159,6 +163,10 @@ class Enemy {
                 let velocity = {x:Math.cos(Math.PI*2*i/this.nova)*10, y:Math.sin(Math.PI*2*i/this.nova)*10}
                 enemyprojectiles.push(new enemyProjectile(this.x, this.y, this.projradius, this.projcolor, velocity, this.projpierce, this.damage, false, false))
             }
+        } else if (this.isIcy == true) {
+			const angle = Math.atan2(player.y - this.y, player.x - this.x)
+            const velocity = {x:Math.cos(angle)*9, y:Math.sin(angle)*9}
+            enemyprojectiles.push(new enemyProjectile(this.x, this.y, this.projradius, this.projcolor, velocity, this.projpierce, this.damage, false, true))
         } else {
             for (let i = 0; i < this.multi; i++) {
                 const angle = Math.atan2(player.y - this.y, player.x - this.x)

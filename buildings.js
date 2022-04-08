@@ -50,6 +50,31 @@ function showpressurizer() {
 	}
 }
 
+function showsynthesizer() {
+	synthesizedisplay += 1;
+	if (synthesizedisplay % 2 == 0) {
+		document.getElementById("synthesizeinfo").style.display = "initial";
+		document.getElementById("synthesizeamount").style.display = "initial";
+		document.getElementById("synthesizeconfirm").style.display = "initial";
+	} else {
+		document.getElementById("synthesizeinfo").style.display = "none";	
+		document.getElementById("synthesizeamount").style.display = "none";
+		document.getElementById("synthesizeconfirm").style.display = "none";
+	}
+}
+
+function showvaporizer() {
+	vaporizedisplay += 1;
+	if (vaporizedisplay % 2 == 0) {
+		document.getElementById("vaporizeinfo").style.display = "initial";
+		document.getElementById("vaporizeamount").style.display = "initial";
+		document.getElementById("vaporizeconfirm").style.display = "initial";
+	} else {
+		document.getElementById("vaporizeinfo").style.display = "none";	
+		document.getElementById("vaporizeamount").style.display = "none";
+		document.getElementById("vaporizeconfirm").style.display = "none";
+	}
+}
 
 
 
@@ -113,6 +138,37 @@ function pressurizediamond() {
 	document.getElementById("pressurizeinfo").style.display = "none";	
 	document.getElementById("pressurizeamount").style.display = "none";
 	document.getElementById("pressurizeconfirm").style.display = "none";
+}
+
+function synthesizeiridium() {
+	synthesizeinput = document.getElementById("synthesizeamount").value;
+	synthesizeinput = parseInt(synthesizeinput);
+	if (typeof(synthesizeinput) == "number") {
+		if (synthesizeinput*9 <= money && synthesizeinput*2 <= iron && synthesizeinput <= titanium && synthesizeinput <= diamond) {
+			money -= 9*synthesizeinput;
+			iron -= 2*synthesizeinput;
+			titanium -= synthesizeinput;
+			diamond -= synthesizeinput;
+			iridium += synthesizeinput;
+		}
+	}
+	document.getElementById("synthesizeinfo").style.display = "none";	
+	document.getElementById("synthesizeamount").style.display = "none";
+	document.getElementById("synthesizeconfirm").style.display = "none";
+}
+
+function vaporizeessence() {
+	vaporizeinput = document.getElementById("vaporizeamount").value;
+	vaporizeinput = parseInt(vaporizeinput);
+	if (typeof(vaporizeinput) == "number") {
+		if (vaporizeinput <= essence) {
+			essence -= vaporizeinput;
+			potatoes += Math.floor(600 + Math.random()*301)*vaporizeinput;
+		}
+	}
+	document.getElementById("vaporizeinfo").style.display = "none";	
+	document.getElementById("vaporizeamount").style.display = "none";
+	document.getElementById("vaporizeconfirm").style.display = "none";
 }
 
 
