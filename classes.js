@@ -54,11 +54,7 @@ class Player {
 
     update() {
         if (pause % 2 === 0) {
-			if (frozen == false) {
-				this.reloadTime--
-			} else {
-				this.reloadTime -= 0.4;	
-			}
+			this.reloadTime -= freezemultiplier;
         }
         if (this.reloadTime <= 0 && pause % 2 === 0) {
             this.shoot()
@@ -185,6 +181,7 @@ class enemyProjectile {
         this.color = color;
         this.velocity = velocity;
         this.isHoming = isHoming;
+		this.isFreezing = isFreezing;
         if (this.isHoming === true) {
             this.lifeTime = 540;
         }

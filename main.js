@@ -38,6 +38,7 @@ let dead = false;
 let stage = 0;
 let level = 1;
 let freezemultiplier = 1;
+let terrainmultiplier = 1;
 
 let ss = 12000;
 
@@ -226,7 +227,7 @@ window.onresize = event => { canvas.width = window.innerWidth; canvas.height = w
 function updateLocation() {
     if (keys["w"] && keys["a"] && player.y > 0 && pause % 2 === 0) {
         if (player.y > 0 && pause % 2 === 0) {
-            player.y -= speed/Math.sqrt(2)*freezemultiplier
+            player.y -= speed/Math.sqrt(2)*freezemultiplier*terrainmultiplier
             projectiles.forEach((projectile, indexp) => {
                 if (projectile.isrotating === true) {
                     projectile.y -= speed/Math.sqrt(2)
@@ -234,7 +235,7 @@ function updateLocation() {
             })
         }
         if (player.x > 0 && pause % 2 === 0) {
-            player.x -= speed/Math.sqrt(2)*freezemultiplier
+            player.x -= speed/Math.sqrt(2)*freezemultiplier*terrainmultiplier
             projectiles.forEach((projectile, indexp) => {
                 if (projectile.isrotating === true) {
                     projectile.x -= speed/Math.sqrt(2)
@@ -243,7 +244,7 @@ function updateLocation() {
         }
     } else if (keys["w"] && keys["d"] && player.y > 0 && pause % 2 === 0) {
         if (player.y > 0 && pause % 2 === 0) {
-            player.y -= speed/Math.sqrt(2)*freezemultiplier
+            player.y -= speed/Math.sqrt(2)*freezemultiplier*terrainmultiplier
             projectiles.forEach((projectile, indexp) => {
                 if (projectile.isrotating === true) {
                     projectile.y -= speed/Math.sqrt(2)
@@ -251,7 +252,7 @@ function updateLocation() {
             })
         }
         if (player.x < 10000 && pause % 2 === 0) {
-            player.x += speed/Math.sqrt(2)*freezemultiplier
+            player.x += speed/Math.sqrt(2)*freezemultiplier*terrainmultiplier
             projectiles.forEach((projectile, indexp) => {
                 if (projectile.isrotating === true) {
                     projectile.x += speed/Math.sqrt(2)
@@ -260,7 +261,7 @@ function updateLocation() {
         }
     } else if (keys["s"] && keys["a"] && player.y > 0 && pause % 2 === 0) {
         if (player.y < 10000 && pause % 2 === 0) {
-            player.y += speed/Math.sqrt(2)*freezemultiplier
+            player.y += speed/Math.sqrt(2)*freezemultiplier*terrainmultiplier
             projectiles.forEach((projectile, indexp) => {
                 if (projectile.isrotating === true) {
                     projectile.y += speed/Math.sqrt(2)
@@ -268,7 +269,7 @@ function updateLocation() {
             })
         }
         if (player.x  > 0 && pause % 2 === 0) {
-            player.x -= speed/Math.sqrt(2)*freezemultiplier
+            player.x -= speed/Math.sqrt(2)*freezemultiplier*terrainmultiplier
             projectiles.forEach((projectile, indexp) => {
                 if (projectile.isrotating === true) {
                     projectile.x -= speed/Math.sqrt(2)
@@ -277,7 +278,7 @@ function updateLocation() {
         }
     } else if (keys["s"] && keys["d"] && player.y > 0 && pause % 2 === 0) {
         if (player.y < 10000 && pause % 2 === 0) {
-            player.y += speed/Math.sqrt(2)*freezemultiplier
+            player.y += speed/Math.sqrt(2)*freezemultiplier*terrainmultiplier
             projectiles.forEach((projectile, indexp) => {
                 if (projectile.isrotating === true) {
                     projectile.y += speed/Math.sqrt(2)
@@ -285,7 +286,7 @@ function updateLocation() {
             })
         }
         if (player.x < 10000 && pause % 2 === 0) {
-            player.x += speed/Math.sqrt(2)*freezemultiplier
+            player.x += speed/Math.sqrt(2)*freezemultiplier*terrainmultiplier
             projectiles.forEach((projectile, indexp) => {
                 if (projectile.isrotating === true) {
                     projectile.x += speed/Math.sqrt(2)
@@ -294,7 +295,7 @@ function updateLocation() {
         }
     } else {
         if (keys["w"] && player.y  > 0 && pause % 2 === 0) {
-            player.y -= speed*freezemultiplier
+            player.y -= speed*freezemultiplier*terrainmultiplier
             projectiles.forEach((projectile, indexp) => {
                 if (projectile.isrotating === true) {
                     projectile.y -= speed
@@ -302,7 +303,7 @@ function updateLocation() {
             })
         }
         if (keys["a"] && player.x  > 0 && pause % 2 === 0) {
-            player.x -= speed*freezemultiplier
+            player.x -= speed*freezemultiplier*terrainmultiplier
             projectiles.forEach((projectile, indexp) => {
                 if (projectile.isrotating === true) {
                     projectile.x -= speed
@@ -310,7 +311,7 @@ function updateLocation() {
             })
         }
         if (keys["s"] && player.y < 10000 && pause % 2 === 0) {
-            player.y += speed*freezemultiplier
+            player.y += speed*freezemultiplier*terrainmultiplier
             projectiles.forEach((projectile, indexp) => {
                 if (projectile.isrotating === true) {
                     projectile.y += speed
@@ -318,7 +319,7 @@ function updateLocation() {
             })
         }
         if (keys["d"] && player.x < 10000 && pause % 2 === 0) {
-            player.x += speed*freezemultiplier
+            player.x += speed*freezemultiplier*terrainmultiplier
             projectiles.forEach((projectile, indexp) => {
                 if (projectile.isrotating === true) {
                     projectile.x += speed
@@ -373,6 +374,7 @@ function regengravity(amount, range) {
 }
 
 function freeze(value) {
+	console.log("asdfiu");
 	frozen = true;	
 	freezemultiplier = value;
 	setTimeout(() => {
@@ -634,7 +636,7 @@ function spawnNovaEnemy(x, y, radius, health, maxhealth, expdrop, projradius, pr
 
 function spawnIceEnemy(x, y, radius, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage) {
     let velocity = {x: 0, y: 0};
-    enemies.push(new Enemy(x, y, radius, velocity, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage, false, false, false, 0, 1, "iceenemy.png", false, false, true))
+    enemies.push(new Enemy(x, y, radius, velocity, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage, false, false, false, 0, 1, "iceenemy.png", false, false, false, true))
 }
 
 
@@ -742,7 +744,6 @@ function spawnNextStage(stage) {
 		}
 	}
 	
-	/*
 	
 	if (stage > 15) {
 		if (stage < 21) {
@@ -754,7 +755,6 @@ function spawnNextStage(stage) {
 		}
 	}
 	
-	*/
 
     // x, y, radius, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage
     if (stage > 1) {

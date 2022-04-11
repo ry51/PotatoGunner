@@ -100,8 +100,9 @@ function animate() {
 	
 	if (upgrade_1 === "heavy" && projectiles.length < 10 + gravitylevel*2 && pause % 2 === 0) {
         gravtimer += 1;
-		if (gravtimer > (20 - gravitylevel/5)) {
-			regengravity(1 + 0.4*gravitylevel, 100 + Math.random()*500);	
+		if (gravtimer > (400 - gravitylevel*3)) {
+			gravtimer = 0;
+			regengravity(2 + 0.4*gravitylevel, 100 + Math.random()*500);	
 		}
     }
 	
@@ -110,31 +111,31 @@ function animate() {
 	
 	if (stage < 16 || stage > 20) {
 		if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#003166") {
-			freezemultiplier = 0.6;
+			terrainmultiplier = 0.6;
 		} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#0055B3") {
-			freezemultiplier = 0.8;
+			terrainmultiplier = 0.8;
 		} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#CEE8F0") {
-			freezemultiplier = 0.95;
+			terrainmultiplier = 0.95;
 		} else if (getColor(grid[tilex][tiley]*(edgeDist(tilex, tiley)/25000)) == "#ADD8E6") {
-			freezemultiplier = 0.9;
+			terrainmultiplier = 0.9;
 		} else {
-			freezemultiplier = 1;	
+			terrainmultiplier = 1;	
 		}
 	} else {
 		if (getColor(grid[tilex][tiley]/850) == "#273F87") {
-			freezemultiplier = 0.5;
+			terrainmultiplier = 0.5;
 		} else if (getColor(grid[tilex][tiley]/850) == "#3454B4") {
-			freezemultiplier = 0.6;
+			terrainmultiplier = 0.6;
 		} else if (getColor(grid[tilex][tiley]/850) == "#3B5FCD") {
-			freezemultiplier = 0.7;
+			terrainmultiplier = 0.7;
 		} else if (getColor(grid[tilex][tiley]/850) == "#BDE0EB") {
-			freezemultiplier = 1.5;
+			terrainmultiplier = 1.5;
 		} else if (getColor(grid[tilex][tiley]/850) == "#CEE8F0") {
-			freezemultiplier = 1.6;
+			terrainmultiplier = 1.6;
 		} else if (getColor(grid[tilex][tiley]/850) == "#DEEFF5") {
-			freezemultiplier = 1.7;
+			terrainmultiplier = 1.7;
 		} else {
-			freezemultiplier = 2;	
+			terrainmultiplier = 2;	
 		}
 	}
 	
@@ -184,7 +185,11 @@ function animate() {
             ctx.closePath();
 
 			if (Math.hypot(enemy.x - player.x, enemy.y - player.y) < 800) {
-				novatimer += 1;
+				if (stage != 15) {
+					novatimer += 1;
+				} else {
+					novatimer += 3;	
+				}
 				if (novatimer > (360 - stage*2)) {
 					novatimer = 0;
 					bossnova(enemy, 10 + stage*2, 100 + stage*4);
@@ -643,9 +648,9 @@ function animate() {
     ctx.fillText("Level: " + level, 60, 105)
     ctx.fillText("Health: " + Math.floor(health), 60, 140)
     ctx.fillText("Damage: " + Math.floor(damage), 60, 175)
-	if (freezemultiplier != 1) {
+	if (freezemultiplier != 1 || terrainmultiplier != 1) {
 		ctx.fillStyle = "#CC0000";
-		ctx.fillText("Speed: " + Math.floor(speed*10*freezemultiplier)/10, 60, 210)	
+		ctx.fillText("Speed: " + Math.floor(speed*10*freezemultiplier*terrainmultiplier)/10, 60, 210)	
 	} else {
 		ctx.fillText("Speed: " + Math.floor(speed*10)/10, 60, 210)	
 	}
@@ -989,7 +994,7 @@ function animate() {
         }
         if (stage === 1) {
             ctx.font = "20px Courier New"
-            ctx.fillText("v2.0.6 new features:", 200, 270)
+            ctx.fillText("v2.0.7 new features:", 200, 270)
             ctx.fillText("Reworked building costs", 200, 290)
             ctx.fillText("Adding ice mechanics", 200, 310)
             ctx.fillText("Reworked enemy scaling and leech scaling", 200, 330)
@@ -1068,17 +1073,15 @@ function animate() {
 			ctx.fillText("damage. Its novas are also much more frequent. The boss will also heal health passively, so", 200, 452);
             ctx.fillText("make sure you kill it quick!", 200, 468);
         } else if (stage === 16) {
-			/*
 			ctx.font = "20px Courier New"
             ctx.fillText("New Content!", 200, 270)
             ctx.fillText("Welcome to the tundra! This new terrain brings various benefits and hinderences.", 200, 290);
 			ctx.fillText("ICE enemies now spawn. They will shoot a freezing bullet, making you less mobile and shoot", 200, 310);
-			ctx.fillText("slower.", 200, 330);
+			ctx.fillText("much slower.", 200, 330);
 			ctx.font = "15px Courier New"
             ctx.fillText("In this new terrain, your mobility is greatly challenged. When on ice, you will move much faster", 200, 436);
 			ctx.fillText("than usual but movement is harder to control. When in a water puddle, you will move much slower", 200, 452);
             ctx.fillText("just like when you're normally in water.", 200, 468);
-			*/
         }
 		
 		ctx.font = "15px Courier New"
