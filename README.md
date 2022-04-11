@@ -66,6 +66,14 @@ Reworked upgrade costs so buildings are more worthwhile
 
 Ice terrain and enemies are still bugged
 
+## V2.0.7
+
+Fixed ice enemies
+
+Added more upgrades
+
+Gameplay (somewhat) complete to stage 19
+
 
 
 
