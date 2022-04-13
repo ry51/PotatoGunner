@@ -221,22 +221,22 @@ function tank3() {
 }
 
 addEventListener("keydown", event => {
-    if (event.key === "z" && level >= 3 && points > 0 && lifelevel < 100) {
+    if (event.key === "z" && level >= 3 && points > 0 && lifelevel < (100 + cap)) {
         lifelevel += 1;
         points -= 1;
         max_health_update()
     }
-    if (event.key === "x" && level >= 4 && points > 0 && powerlevel < 100) {
+    if (event.key === "x" && level >= 4 && points > 0 && powerlevel < (100 + cap)) {
         powerlevel += 1;
         points -= 1;
         damage_update()
     }
-    if (event.key === "c" && level >= 5 && points > 0 && speedlevel < 100) {
+    if (event.key === "c" && level >= 5 && points > 0 && speedlevel < (100 + cap)) {
         speedlevel += 1;
         points -= 1;
         speed_update()
     }
-    if (event.key === "v" && level >= 8 && points > 0 && experiencedlevel < 100) {
+    if (event.key === "v" && level >= 8 && points > 0 && experiencedlevel < (100 + cap)) {
         experiencedlevel += 1;
         points -= 1;
     }
@@ -249,7 +249,7 @@ if (event.key === "b" && points > 0 && upgrade_1 === "heavy" && gravitylevel < 5
         points -= 1;
         gravitylevel += 1;
     }
-if (event.key === "b" && points > 0 && upgrade_1 === "multishot" && precisionlevel < 100) {
+if (event.key === "b" && points > 0 && upgrade_1 === "multishot" && precisionlevel < (100 + cap)) {
 points -= 1;
 precisionlevel += 1;
 }

@@ -19,7 +19,7 @@ function animate() {
     ctx.strokeStyle = "black";
     ctx.stroke();
 	
-	if (stage < 16 || stage > 20) {
+	if (stage < 16 || stage > 30) {
 		for (let x = 0; x < grid.length; x++) {
         	for (let y = 0; y < grid[x].length; y++) {
             	if (renderingPosX(100 * x) < - 100 || renderingPosX(100 * x) > canvas.width + 100 || renderingPosY(100 * y) < -100 || renderingPosY(100 * y) > canvas.height + 100) {
@@ -47,7 +47,7 @@ function animate() {
     ctx.fillStyle = "#000000";
     ctx.fillRect(canvas.width - 252, canvas.height - 252, 204, 204);
 
-	if (stage < 16 || stage > 20) {
+	if (stage < 16 || stage > 30) {
 		for (let x = 0; x < grid.length; x += 2) {
         	for (let y = 0; y < grid[x].length; y += 2) {
             	ctx.fillStyle = getColor(grid[x][y]*(edgeDist(x, y)/25000));
@@ -139,6 +139,22 @@ function animate() {
 		}
 	}
 	
+	if (stage > 20 && stage < 30) {
+		if (getColor(grid[tilex][tiley]/850) == "#FF7233") {
+			health -= 1;
+		} else if (getColor(grid[tilex][tiley]/850) == "#FF6119") {
+			health -= 1.4;
+		} else if (getColor(grid[tilex][tiley]/850) == "#FF4F00") {
+			health -= 1.8;
+		} else if (getColor(grid[tilex][tiley]/850) == "#DD2100") {
+			health -= 2.2;
+		} else if (getColor(grid[tilex][tiley]/850) == "#BC0000") {
+			health -= 2.6;
+		} else if (getColor(grid[tilex][tiley]/850) == "#AA0000") {
+			health -= 3;
+		}
+	}
+	
 	
 	
    
@@ -192,7 +208,12 @@ function animate() {
 				}
 				if (novatimer > (360 - stage*2)) {
 					novatimer = 0;
-					bossnova(enemy, 10 + stage*2, 100 + stage*4);
+					if (stage < 16 || stage > 20) {
+						bossnova(enemy, 10 + stage*2, 100 + stage*4);
+					} else {
+						bossicenova(enemy, 10 + stage*2, 40 + 120*Math.floor(stage/20));
+					}
+					
 				}
 			}
 			if (stage === 10 && Math.hypot(enemy.x - player.x, enemy.y - player.y) < 800) {
@@ -203,8 +224,14 @@ function animate() {
 				}
 			}
 			
-			if (stage === 15) {
-				enemy.health += 2;	
+			if (enemy.health < enemy.maxhealth) {
+				enemy.health += stage/5;	
+			}
+			
+			if (chaos == true) {
+				ctx.fillStyle = "#FFA500";
+				ctx.arc(enemy.x, enemy.y, 500, 0, Math.PI*2, true);
+				chaos = false;
 			}
 			
         } else if (enemy.isBoss === true) {
@@ -512,6 +539,8 @@ function animate() {
         } else if (enemyprojectile.color === "#F00000") {
             let fade = enemyprojectile.lifeTime / 90;
             enemyprojectile.color = `rgba(240, 0, 0, ${fade})`
+        } else if (enemyprojectile.color === "#ADD8E6") {
+        } else if (enemyprojectile.color === "red") {
         } else {
             let fade = enemyprojectile.lifeTime / 90;
             enemyprojectile.color = `rgba(240, 0, 0, ${fade})`
@@ -1081,7 +1110,28 @@ function animate() {
 			ctx.font = "15px Courier New"
             ctx.fillText("In this new terrain, your mobility is greatly challenged. When on ice, you will move much faster", 200, 436);
 			ctx.fillText("than usual but movement is harder to control. When in a water puddle, you will move much slower", 200, 452);
-            ctx.fillText("just like when you're normally in water.", 200, 468);
+            ctx.fillText("just like when you're normally in water. In addition, boss novas now freeze you on contact, but", 200, 468);
+			ctx.fillText("there are less bullets per nova to make it fair.", 200, 484);
+        } else if (stage === 20) {
+			ctx.font = "15px Courier New"
+            ctx.fillText("This MEGABOSS on stage 20 and all future level bosses will have the BELLIGERENT modifier. In", 200, 436);
+			ctx.fillText("addition, it fires powerful freezing novas and has stronger minions. All enemies moving forward", 200, 452);
+            ctx.fillText("will be a lot stronger.", 200, 468);
+        } else if (stage === 21) {
+			ctx.font = "20px Courier New"
+            ctx.fillText("New Content!", 200, 270)
+            ctx.fillText("Welcome to the volcano! This new terrain brings various benefits and hinderences.", 200, 290);
+			ctx.fillText("FIRE enemies now spawn. They will shoot a powerful fast-firing beam of fire, so make sure you", 200, 310);
+			ctx.fillText("kill these enemies before they get to you.", 200, 330);
+			ctx.font = "15px Courier New"
+            ctx.fillText("In this new terrain, there are luckily no mobility issues. However, due to the constant formation of", 200, 436);
+			ctx.fillText("uncooled magma streams, there will be areas of flame which will damage you if you stand on them.", 200, 452);
+            ctx.fillText("Although they don't do very much damage, it can cause massive damage over time. Don't linger in the", 200, 468);
+			ctx.fillText("same spot for too long.", 200, 484);
+        } else if (stage === 20) {
+			ctx.font = "15px Courier New"
+            ctx.fillText("This MEGABOSS on stage 25 has the CHAOS modifier. In addition to being exceptionally strong,", 200, 436);
+			ctx.fillText("it will knock you back constantly and throw you into pandemonium with uncontrolled pulses.", 200, 452);
         }
 		
 		ctx.font = "15px Courier New"
