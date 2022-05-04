@@ -74,6 +74,14 @@ Added more upgrades
 
 Gameplay (somewhat) complete to stage 19
 
+## V2.1
+
+Reworked higher tier upgrades
+
+Gameplay is pretty much complete
+
+
+
 
 
 
