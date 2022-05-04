@@ -52,7 +52,7 @@ let health = 950;
 let maxhealth = 950;
 let reload_time = 15;
 let exp = 0;
-let exp_required = [10, 100, 250, 400, 600, 900, 1200, 1600, 2000, 2500, 3200, 4500, 6000, 7500, 9000, 12000, 15000, 18000, 22000, 27000, 32000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 120000, 140000, 170000, 200000, 240000, 280000, 330000, 380000, 450000];
+let exp_required = [10, 100, 250, 400, 600, 900, 1200, 1600, 2000, 2500, 3200, 4500, 6000, 7500, 9000, 12000, 15000, 18000, 22000, 27000, 32000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 120000, 140000, 170000, 200000, 240000, 280000, 330000, 380000, 440000, 500000, 550000, 600000, 660000, 750000, 850000, 1000000];
 
 let leech = 0;
 let cap = 0;
@@ -75,7 +75,7 @@ let buildingex = false;
 let lifelevel = 0;
 let powerlevel = 0;
 let speedlevel = 0;
-let experiencedlevel = 0;
+let experiencedlevel = 10000;
 let impactlevel = 0;
 let agilitylevel = 0;
 let gravitylevel = 0;
@@ -133,6 +133,7 @@ let upgrade_3;
 let upgrade_4;
 let upgrade_5;
 let upgrade_6;
+let upgrade_7;
 
 let cta = 0;
 
@@ -212,6 +213,9 @@ if (saveobjectstring) {
 let frames = 0;
 
 let destructAuraActive = false;
+let novaActive = false;
+let radianceActive = false;
+let overdriveActive = false;
 
 let keys = {"w": false, "a": false, "s": false, "d": false}
 
@@ -351,7 +355,7 @@ function activate(abilityname) {
     if (abilityname === "Destructive Aura") {
         destructAuraActive = true
         enemies.forEach((enemy, index) => {
-            if (Math.hypot(enemy.x - player.x, enemy.y - player.y) < 300) {
+            if (Math.hypot(enemy.x - player.x, enemy.y - player.y) < 700) {
                 if (upgrade_5 === "magic3") {
                     enemies[index].health *= 0.3;  
                 } else {
@@ -363,6 +367,18 @@ function activate(abilityname) {
             destructAuraActive = false
             abilities[0].state = "recharging"
         }, 1000)
+    } else if (abilityname === "Radiance") {
+        radianceActive = true;
+        setTimeout(() => {
+            radianceActive = false
+            abilities[0].state = "recharging"
+        }, 4000)
+    } else if (abilityname === "Overdrive") {
+        overdriveActive = true;
+        setTimeout(() => {
+            overdriveActive = false
+            abilities[0].state = "recharging"
+        }, 5000)
     }
 }
 
@@ -491,12 +507,12 @@ function percentnova(item, range, percent) {
 }
 
 
-// incinerator build firearcs
-function firearc(projectilecount) {
+// normal projectile arcs
+function arc(projectilecount, colour, speed) {
     const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
     for (let i = -projectilecount; i <= projectilecount; i++) {
-        let velocity = {x:Math.cos(angle + 0.01*i)*15, y:Math.sin(angle + 0.01*i)*15}
-        projectiles.push(new Projectile(player.x, player.y, 5, "#FF9900", velocity, pierce))
+        let velocity = {x:Math.cos(angle + 0.01*i)*speed, y:Math.sin(angle + 0.01*i)*speed}
+        projectiles.push(new Projectile(player.x, player.y, 5, colour, velocity, pierce))
     }
 }
 
@@ -629,6 +645,8 @@ function getColor(value) {
         } else {
             return "#AA0000";
         }
+	} else {
+		return "#000000";	
 	}
 		
 }
@@ -866,7 +884,7 @@ function spawnNextStage(stage) {
 	} else if (stage > 25 && stage < 30) {
 		spawnSuperBoss(9999, 9999, 150, (level + 10)*1.06**stage*800*Math.floor(1 + stage/10), (level + 10)*1.06**stage*500*Math.floor(1 + stage/10), Math.floor((level + 10)*1.06**stage*5*Math.floor(1 + stage/10)), 15, "#00F000", 1, 6, 6, stage*4)
 	} else if (stage === 30) {
-		spawnSuperBoss(4999, 4999, 150, (level + 10)*1.06**stage*50000*Math.floor(1 + stage/10), (level + 10)*1.06**stage*5000*Math.floor(1 + stage/10), 0, 15, "#00F000", 1, 3, 3, stage*20)
+		spawnSuperBoss(4999, 4999, 150, (level + 10)*1.06**stage*50000*Math.floor(1 + stage/10), (level + 10)*1.06**stage*50000*Math.floor(1 + stage/10), 0, 15, "#00F000", 1, 3, 3, stage*5)
 	}
 
 //function spawnSuperBoss(x, y, radius, health, maxhealth, expdrop, projradius, projcolor, projpierce, enemyReloadTime, enemyReloadTimer, damage, image) {
@@ -1118,7 +1136,7 @@ addEventListener("keydown", event => {
 // decrease cooldown of abilities after each second
 setInterval(() => {
     abilities.forEach((ability, indexa) => {
-        if (abilities[indexa].cooldownremaining <= 0) {
+        if (abilities[indexa].cooldownremaining <= 1) {
             abilities[indexa].state = "ready";
         } else if (abilities[indexa].cooldownremaining > 0 && pause % 2 === 0) {
             abilities[indexa].cooldownremaining -= 1;

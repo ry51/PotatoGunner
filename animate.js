@@ -85,22 +85,55 @@ function animate() {
 	}
 	
 	if (upgrade_4 === "incinerator2") {
-		firetimer += 1;
-		if (firetimer > 400) {
-			if (upgrade_6 === "incinerator4") {
-				firearc(150);	
-			} else if (upgrade_5 === "incinerator3") {
-				firearc(100);	
-			} else {
-				firearc(50);	
+		if (pause % 2 === 0) {
+			firetimer += 1;
+		}
+		
+		if (upgrade_7 === "meltdown") {
+			if (firetimer > 300) {
+				if (overdriveActive == false) {
+					arc(150, "#FF9900", 25);
+					firetimer = 0;
+				} else {
+					arc(200, "#ADD8E6", 32);
+					firetimer = 0;
+				}
 			}
-			firetimer = 0;
+		}
+		else {
+			if (firetimer > 400) {
+				if (upgrade_6 === "incinerator4") {
+					arc(150, "#FF9900", 22);
+				} else if (upgrade_5 === "incinerator3") {
+					arc(100, "#FF9900", 19);
+				} else {
+					arc(50, "#FF9900", 16);
+				}
+				firetimer = 0;
+			}
+		}
+	}
+	
+	if (upgrade_7 === "microwave") {
+		if (pause % 2 === 0) {
+			firetimer += 1;
+			if (firetimer > 400) {
+				if (radianceActive == false) {
+					arc(20, "rgba(20, 151, 20, 0.6)", 10.8);
+					firetimer = 0;
+				} else {
+					arc(30, "rgba(40, 222, 40, 0.4)", 24);
+					firetimer = 0;
+				}
+			}
 		}
 	}
 	
 	if (upgrade_1 === "heavy" && projectiles.length < 10 + gravitylevel*2 && pause % 2 === 0) {
-        gravtimer += 1;
-		if (gravtimer > (400 - gravitylevel*3)) {
+		if (pause % 2 === 0) {
+			gravtimer += 1;
+		}
+		if (gravtimer > (300 - gravitylevel*3)) {
 			gravtimer = 0;
 			regengravity(2 + 0.4*gravitylevel, 100 + Math.random()*500);	
 		}
@@ -139,7 +172,7 @@ function animate() {
 		}
 	}
 	
-	if (stage > 20 && stage < 30) {
+	if (stage > 20 && stage < 30 && pause % 2 == 0) {
 		if (getColor(grid[tilex][tiley]/850) == "#FF7233") {
 			health -= 1;
 		} else if (getColor(grid[tilex][tiley]/850) == "#FF6119") {
@@ -206,10 +239,22 @@ function animate() {
 				} else {
 					novatimer += 3;	
 				}
-				if (novatimer > (360 - stage*2)) {
+				if (novatimer > (360 - stage*3)) {
 					novatimer = 0;
 					if (stage < 16 || stage > 20) {
-						bossnova(enemy, 10 + stage*2, 100 + stage*4);
+						bossnova(enemy, 5 + stage, 100 + stage*4);
+						if (stage === 30) {
+							bossicenova(enemy, 10 + stage*2, 40 + 120*Math.floor(stage/20));	
+						}
+						if (stage === 25) {
+							chaosnova(enemy, 1000, 500);	
+							ctx.fillStyle = "#FFA500";
+							ctx.beginPath();
+							ctx.arc(enemy.x, enemy.y, 500, 0, Math.PI*2, true);
+							ctx.fill();
+							ctx.closePath();
+							ctx.fillStyle = "#000000";
+						}
 					} else {
 						bossicenova(enemy, 10 + stage*2, 40 + 120*Math.floor(stage/20));
 					}
@@ -218,7 +263,7 @@ function animate() {
 			}
 			if (stage === 10 && Math.hypot(enemy.x - player.x, enemy.y - player.y) < 800) {
 				spawntimer += 1;
-				if (spawntimer > 30) {
+				if (spawntimer > 30 && enemies.length < 400) {
 					spawntimer = 0;
 					spawnEnemy(enemy.x + Math.random()*800 - 400, enemy.y + Math.random()*800 - 400, 25, 75, 75, 0, 5, "#FF0000", 1, 60, 60, 6);
 				}
@@ -226,12 +271,6 @@ function animate() {
 			
 			if (enemy.health < enemy.maxhealth) {
 				enemy.health += stage/5;	
-			}
-			
-			if (chaos == true) {
-				ctx.fillStyle = "#FFA500";
-				ctx.arc(enemy.x, enemy.y, 500, 0, Math.PI*2, true);
-				chaos = false;
 			}
 			
         } else if (enemy.isBoss === true) {
@@ -259,7 +298,12 @@ function animate() {
         }
     })
 
-    ctx.fillStyle = "#000000"
+	if (stage === 30) {
+		ctx.fillStyle = "#FFFFFF";
+	} else {
+		ctx.fillStyle = "#000000";
+	}
+    
     ctx.beginPath()
     ctx.arc(canvas.width - 250 + player.x / 50, canvas.height - 250 + player.y / 50, 4, 0, Math.PI*2, true)
     ctx.fill()
@@ -485,7 +529,7 @@ function animate() {
             health -= enemyprojectiles[indexe].damage*(1-damagereduced/100);
             enemyattacks += 1;
 			if (enemyprojectile.isFreezing == true) {
-				freeze(0.3);
+				freeze(0.6);
 			}
             if (health <= 0) {
                 if (pause % 2 === 0) {
@@ -672,7 +716,11 @@ function animate() {
     updateLocation()
     ctx.font = "30px Courier New"
     ctx.textAlign = "left"
-    ctx.fillStyle = "black"
+	if (stage == 30) {
+		ctx.fillStyle = "white";
+	} else {
+		ctx.fillStyle = "black";	
+	}
     ctx.fillText("Stage: " + stage, 60, 70)
     ctx.fillText("Level: " + level, 60, 105)
     ctx.fillText("Health: " + Math.floor(health), 60, 140)
@@ -683,27 +731,35 @@ function animate() {
 	} else {
 		ctx.fillText("Speed: " + Math.floor(speed*10)/10, 60, 210)	
 	}
-    ctx.fillStyle = "black"
+	if (stage == 30) {
+		ctx.fillStyle = "white";
+	} else {
+		ctx.fillStyle = "black";	
+	}
     ctx.fillText("Experience: " + Math.floor(exp) + "/" + exp_required[level - 1], 60, 245)
     ctx.fillText("Enemies killed: " + enemies_killed, 60, 280)
     ctx.textAlign = "right"
     if (abilities.length > 0) {
         for (let i = 0; i < abilities.length; i++) {
-            ctx.fillText(abilities[i].name + " [" + abilities[i].hotkey + "]", canvas.width - 80, 80*(i + 1))
+            ctx.fillText(abilities[i].name + " [" + abilities[i].hotkey + "]", canvas.width - 80, 200 + 80*(i + 1))
             ctx.font = "25px Courier New"
             if (abilities[i].state === "active") {
                 ctx.fillStyle = "#055900"
-                ctx.fillText(abilities[i].name + " is active", canvas.width - 80, 80*(i + 1) + 30)
+                ctx.fillText(abilities[i].name + " is active", canvas.width - 80, 200 + 80*(i + 1) + 30)
             } else if (abilities[i].state === "ready") {
                 ctx.fillStyle = "#D4AF37"
-                ctx.fillText(abilities[i].name + " is ready", canvas.width - 80, 80*(i + 1) + 30)
+                ctx.fillText(abilities[i].name + " is ready", canvas.width - 80, 200 + 80*(i + 1) + 30)
             } else if (abilities[i].state === "recharging") {
                 ctx.fillStyle = "#BB0A1E"
-                ctx.fillText(abilities[i].name + " is recharging, " + Math.floor(abilities[i].cooldownremaining) + "s remain", canvas.width - 80, 80*(i + 1) + 30)
+                ctx.fillText(abilities[i].name + " is recharging, " + Math.floor(abilities[i].cooldownremaining) + "s remain", canvas.width - 80, 200 + 80*(i + 1) + 30)
             }
         }
     }
-    ctx.fillStyle = "black"
+	if (stage == 30) {
+		ctx.fillStyle = "white";
+	} else {
+		ctx.fillStyle = "black";	
+	}
     ctx.textAlign = "left"
     ctx.fillText("Points: " + points, 60, 330)
     if (frames < 3600) {
@@ -743,9 +799,60 @@ function animate() {
 			ctx.fillText("[N] for buildings info", canvas.width - 80, 200);	
 		}
 	}
-    ctx.fillStyle = "black"
+	if (stage === 30) {
+		ctx.fillStyle = "white";
+	} else {
+		ctx.fillStyle = "black";
+	}
     ctx.textAlign = "left";
-    if (clickable === true && level >= 32 && !upgrade_6) {
+	if (clickable === true && level >= 40 && !upgrade_7) {
+        if (upgrade_6 === "infiltrator") {
+            ctx.font = "30px Courier New"
+            ctx.fillText("FUTUREFIGHTER [t]", 80, 440)
+            ctx.font = "20px Courier New"
+            ctx.fillText("Use future technology to crush your foes with ease.", 80, 460)
+        } else if (upgrade_6 === "incinerator4") {
+            ctx.font = "30px Courier New"
+            ctx.fillText("MAGMATIC MELTDOWN [t]", 80, 440)
+            ctx.font = "20px Courier New"
+            ctx.fillText("Tear apart your enemies with a solid beam of fiery destruction.", 80, 460)
+        } else if (upgrade_6 === "magic4") {
+            ctx.font = "30px Courier New"
+            ctx.fillText("WIZMASTER [t]", 80, 440)
+            ctx.font = "20px Courier New"
+            ctx.fillText("Unrivaled magic power will devastate your enemies.", 80, 460)
+        } else if (upgrade_6 === "multishot6") {
+            ctx.font = "30px Courier New"
+            ctx.fillText("HYPERNOVA [t]", 80, 440)
+            ctx.font = "20px Courier New"
+            ctx.fillText("Melt your enemies with powerful volleys of 36x projectiles.", 80, 460)
+        } else if (upgrade_6 === "buckshot5") {
+            ctx.font = "30px Courier New"
+            ctx.fillText("DOMINANCE [t]", 80, 440)
+            ctx.font = "20px Courier New"
+            ctx.fillText("Fire extremely fast and destroy bosses.", 80, 460)
+        } else if (upgrade_6 === "pierce4") {
+            ctx.font = "30px Courier New"
+            ctx.fillText("MICROWAVE [t]", 80, 440)
+            ctx.font = "20px Courier New"
+            ctx.fillText("Shred your enemies with a radiating microwave.", 80, 460)
+        } else if (upgrade_6 === "nuker") {
+            ctx.font = "30px Courier New"
+            ctx.fillText("HELLNUKER [t]", 80, 440)
+            ctx.font = "20px Courier New"
+            ctx.fillText("Powerful bombing capability will devastate your enemies.", 80, 460)
+        } else if (upgrade_6 === "fragmented3") {
+            ctx.font = "30px Courier New"
+            ctx.fillText("MEGAFRAGMENTED [t]", 80, 440)
+            ctx.font = "20px Courier New"
+            ctx.fillText("Destroys many enemies in one hit with powerful splitting shards.", 80, 460)
+        } else if (upgrade_6 === "tank3") {
+            ctx.font = "30px Courier New"
+            ctx.fillText("MISSILELANCER [t]", 80, 440)
+            ctx.font = "20px Courier New"
+            ctx.fillText("Powerful arrays of missiles tear apart enemies.", 80, 460)
+        }
+    } else if (clickable === true && level >= 32 && !upgrade_6) {
         if (upgrade_5 === "fighter5") {
             ctx.font = "30px Courier New"
             ctx.fillText("INFILTRATOR [t]", 80, 440)
@@ -802,7 +909,7 @@ function animate() {
             ctx.font = "30px Courier New"
             ctx.fillText("INCINERATOR III [t]", 80, 440)
             ctx.font = "20px Courier New"
-            ctx.fillText("Further increases damage and adds a periodic firearc.", 80, 460)
+            ctx.fillText("Further increases damage and enhances firearc.", 80, 460)
         } else if (upgrade_4 === "magic2") {
             ctx.font = "30px Courier New"
             ctx.fillText("MAGIC III [t]", 80, 440)
@@ -849,7 +956,7 @@ function animate() {
             ctx.font = "30px Courier New"
             ctx.fillText("INCINERATOR II [t]", 80, 440)
             ctx.font = "20px Courier New"
-            ctx.fillText("Increases fire damage even more!", 80, 460)
+            ctx.fillText("Increases fire damage even more and adds a periodic fire arc attack.", 80, 460)
         } else if (upgrade_3 === "magic") {
             ctx.font = "30px Courier New"
             ctx.fillText("MAGIC II [t]", 80, 440)
@@ -928,7 +1035,7 @@ function animate() {
             ctx.font = "30px Courier New"
             ctx.fillText("LIGHT [y]", 80, 510)
             ctx.font = "20px Courier New"
-            ctx.fillText("Massively increases movement speed.", 80, 530)
+            ctx.fillText("Massively increases movement speed and agility.", 80, 530)
         } else if (upgrade_1 === "multishot") {
             ctx.fillText("MULTISHOT II [t]", 80, 440)
             ctx.font = "20px Courier New"
@@ -989,11 +1096,17 @@ function animate() {
             ctx.font = "20px Courier New"
             ctx.fillText("Increases speed, regen speed, and projectile count of rotating projectiles.", 80, 740)
         }
-        if (upgrade_1 === "multishot") {
+        if (upgrade_2 === "multishot2") {
             ctx.font = "30px Courier New"
             ctx.fillText(`PRECISION [b] Level: ${precisionlevel}`, 80, 720)
             ctx.font = "20px Courier New"
             ctx.fillText("Makes multishot projectiles much more accurate.", 80, 740)
+        }
+		if (upgrade_2 === "buckshot") {
+            ctx.font = "30px Courier New"
+            ctx.fillText(`IMPACT [b] Level: ${impactlevel}`, 80, 720)
+            ctx.font = "20px Courier New"
+            ctx.fillText("Each hit on an enemy takes off an additional 0.1% of their current health.", 80, 740)
         }
         if (level >= 15 && upgrade_3 === "magic") {
             ctx.font = "30px Courier New"
@@ -1019,7 +1132,10 @@ function animate() {
         } else {
             ctx.font = "50px Courier New"
             ctx.fillStyle = "black"
-            ctx.fillText("Stage " + stage, 200, 230)
+			if (stage < 31) {
+				ctx.fillText("Stage " + stage, 200, 230)
+			}
+            
         }
         if (stage === 1) {
             ctx.font = "20px Courier New"
@@ -1045,9 +1161,9 @@ function animate() {
             ctx.fillText("Boss packs spawn! Each stage there will be a couple bosses with minions around them", 200, 310)
             ctx.fillText("allowing you to rack up exp and loot quickly.", 200, 330)
             ctx.font = "15px Courier New"
-            ctx.fillText("COPPER now spawns in the world. Like gold and potatoes, copper is a resource that can be used", 200, 436);
-            ctx.fillText("to purchase upgrades. In the later stages, copper can also be used to create more powerful", 200, 452);
-            ctx.fillText("resources.", 200, 468);
+            ctx.fillText("As you level up, you will notice text on the left-hand side of the screen with an associated", 200, 436);
+            ctx.fillText("hotkey. If your total points is more than zero, you can spend points on the upgrades to power", 200, 452);
+            ctx.fillText("up your character. Standard upgrades cap out at 100 levels.", 200, 468);
             ctx.fillText("ESSENCE spawns in the world, but it is an exceptionally rare and powerful resource. One", 200, 484);
             ctx.fillText("essence drops every 100 kills and all upgrades need essence to be purchased.", 200, 500);
             ctx.fillText("You have unlocked your first upgrade! Press [M] to toggle the upgrade information menu.", 200, 516);
@@ -1056,7 +1172,7 @@ function animate() {
             ctx.fillText("New Content!", 200, 270)
             ctx.fillText("HOMING enemies now spawn. They deal extra damage with long-lasting seeking projectiles.", 200, 290)
 			ctx.font = "15px Courier New"
-            ctx.fillText("You will unlock new upgrades every couple of levels.", 200, 436);
+            ctx.fillText("You will unlock new upgrades every couple of stages.", 200, 436);
         } else if (stage === 5) {
             ctx.font = "20px Courier New"
             ctx.fillText("New Content!", 200, 270)
@@ -1128,10 +1244,39 @@ function animate() {
 			ctx.fillText("uncooled magma streams, there will be areas of flame which will damage you if you stand on them.", 200, 452);
             ctx.fillText("Although they don't do very much damage, it can cause massive damage over time. Don't linger in the", 200, 468);
 			ctx.fillText("same spot for too long.", 200, 484);
-        } else if (stage === 20) {
+        } else if (stage === 25) {
 			ctx.font = "15px Courier New"
             ctx.fillText("This MEGABOSS on stage 25 has the CHAOS modifier. In addition to being exceptionally strong,", 200, 436);
 			ctx.fillText("it will knock you back constantly and throw you into pandemonium with uncontrolled pulses.", 200, 452);
+        } else if (stage === 26) {
+			ctx.font = "20px Courier New"
+            ctx.fillText("You're getting closer to something. You're not sure what, but you know it's going to be over soon.", 200, 290);
+			ctx.fillText("Enemies are now much stronger, and resources are more prominent. Level up quick and make sure to", 200, 310);
+			ctx.fillText("get enough health to survive the final stretch.", 200, 330);
+			ctx.font = "15px Courier New"
+            ctx.fillText("Magma is more prominent. Much larger magma puddles will now spawn, and you will lose life much", 200, 436);
+			ctx.fillText("quicker by standing in them as well. Save up for destruction and leech upgrades to pack a harder", 200, 452);
+            ctx.fillText("punch and survive in magma easier.", 200, 468);
+        } else if (stage === 30) {
+			ctx.fillStyle = "black";
+			ctx.font = "20px Courier New"
+            ctx.fillText("A sudden noise outside wakes you with a start. How did you get here? Reality seems like a distant", 200, 270)
+            ctx.fillText("memory while your brain races to figure out what is going on. Hordes of enemies seem to be surrounding", 200, 290);
+			ctx.fillText("something. You need to know what that something is. You need to find an answer.", 200, 310);
+			ctx.font = "15px Courier New"
+            ctx.fillText("This is it. The void. The end of the game. Kill the final boss and you win...", 200, 436);
+        } else if (stage === 31) {
+			ctx.fillStyle = "black"
+			ctx.font = "20px Courier New"
+            ctx.fillText("Congratulations! You win!!", 200, 270)
+            if (frames < 3600) {
+        		ctx.fillText("Time taken: " + Math.floor(frames/60), 200, 290)
+    		} else if (frames >= 3600 && frames%3600 < 600) {
+        		ctx.fillText("Time taken: " + Math.floor(frames/3600) + ":0" + Math.floor((frames%3600)/60), 200, 290)
+    		} else {
+        		ctx.fillText("Time taken: " + Math.floor(frames/3600) + ":" + Math.floor((frames%3600)/60), 200, 290)
+    		}
+			ctx.font = "15px Courier New"
         }
 		
 		ctx.font = "15px Courier New"
@@ -1232,7 +1377,12 @@ function animate() {
 
 
     ctx.font = "30px Courier New"
-    ctx.fillStyle = "black"
+	if (stage == 30) {
+		ctx.fillStyle = "white";
+	} else {
+		ctx.fillStyle = "black";	
+	}
+    
         
     ctx.fillText(Math.floor(money), 110, canvas.height - 30);
     ctx.fillText(Math.floor(potatoes), 235, canvas.height - 30);

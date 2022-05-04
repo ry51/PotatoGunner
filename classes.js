@@ -19,36 +19,97 @@ class Player {
     }
 
     shoot() {
-        if (incin === 1) {
+		if (upgrade_7 === "microwave") {
+			if (radianceActive === true) {
+				const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
+            	for (let i = 0; i <= 8; i++) {
+                	const velocity = {x:Math.cos(angle)*20, y:Math.sin(angle)*20};
+					projectiles.push(new Projectile(this.x + Math.cos(angle)*15*i, this.y + Math.sin(angle)*15*i, 11, "rgba(40, 222, 40, 0.4)", velocity, pierce, true, false));
+            	}
+			} else {
+				const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
+            	for (let i = 0; i <= 4; i++) {
+                	const velocity = {x:Math.cos(angle)*9, y:Math.sin(angle)*9};
+					projectiles.push(new Projectile(this.x + Math.cos(angle)*10*i, this.y + Math.sin(angle)*10*i, 11, "rgba(20, 151, 20, 0.6)", velocity, pierce, true, false));
+            	}
+			}
+        } else if (upgrade_7 === "missilelancer") {
+             const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
+            for (let i = 0; i <= tanks; i++) {
+                const velocity = {x:Math.cos(angle)*(10 + tanks), y:Math.sin(angle)*(10 + tanks)}
+					projectiles.push(new Projectile(this.x + Math.cos(angle)*10*i, this.y + Math.sin(angle)*10*i, 8, "#ADD8E6", velocity, pierce, true, false));
+            }
+        } else if (upgrade_7 === "meltdown") {
+			if (overdriveActive === true) {
+				const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
+            	const velocity = {x:Math.cos(angle)*15, y:Math.sin(angle)*15}
+            	projectiles.push(new Projectile(this.x, this.y, 9, "#ADD8E6", velocity, 2, true, false))
+			} else {
+				const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
+            	const velocity = {x:Math.cos(angle)*9, y:Math.sin(angle)*9}
+            	projectiles.push(new Projectile(this.x, this.y, 7, "#FF9900", velocity, 1, true, false))
+			}
+        } else if (upgrade_7 === "dominance") {
+			const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
+            for (let i = 0; i < buck; i++) {
+                const velocity = {x:Math.cos(angle+0.03*i - 0.015*buck + 0.015)*9, y:Math.sin(angle+0.03*i - 0.015*buck + 0.015)*9}
+				projectiles.push(new Projectile(this.x, this.y, 9, "#AAAAAA", velocity, pierce, true, false))
+            }
+        } else if (incin === 1) {
             const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
             const velocity = {x:Math.cos(angle)*8, y:Math.sin(angle)*8}
             projectiles.push(new Projectile(this.x, this.y, 5+3*weight, "#FF9900", velocity, pierce, true, false))
         } else if (fragments > 0) {
             const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
             const velocity = {x:Math.cos(angle)*8, y:Math.sin(angle)*8}
-            projectiles.push(new Projectile(this.x, this.y, 5+3*weight, "#000000", velocity, pierce, true, false))
+			if (stage == 30) {
+				projectiles.push(new Projectile(this.x, this.y, 5+3*weight, "#FFFFFF", velocity, pierce, true, false))
+			} else {
+				projectiles.push(new Projectile(this.x, this.y, 5+3*weight, "#000000", velocity, pierce, true, false))
+			}
+            
         } else if (tanks >= 1) {
             const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
             for (let i = 0; i <= tanks; i++) {
                 const velocity = {x:Math.cos(angle)*(10 + tanks), y:Math.sin(angle)*(10 + tanks)}
-                projectiles.push(new Projectile(this.x + Math.cos(angle)*10*i, this.y + Math.sin(angle)*10*i, 8, "#000000", velocity, pierce, true, false))
+				if (stage == 30) {
+					projectiles.push(new Projectile(this.x + Math.cos(angle)*10*i, this.y + Math.sin(angle)*10*i, 8, "#FFFFFF", velocity, pierce, true, false))
+				} else {
+					projectiles.push(new Projectile(this.x + Math.cos(angle)*10*i, this.y + Math.sin(angle)*10*i, 8, "#000000", velocity, pierce, true, false))
+				}
+                
             }
         }  else if (buck >= 1) {
             const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
             for (let i = 0; i < buck; i++) {
                 const velocity = {x:Math.cos(angle+0.03*i - 0.015*buck + 0.015)*6, y:Math.sin(angle+0.03*i - 0.015*buck + 0.015)*6}
-                projectiles.push(new Projectile(this.x, this.y, 7+3*weight, "#000000", velocity, pierce, true, false))
+				if (stage == 30) {
+					projectiles.push(new Projectile(this.x, this.y, 7, "#FFFFFF", velocity, pierce, true, false))
+				} else {
+					projectiles.push(new Projectile(this.x, this.y, 7, "#999999", velocity, pierce, true, false))	
+				}
+                
             }
         } else if (multi >= 1) {
             const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
             for (let i = 0; i < multi; i++) {
                 const velocity = {x:Math.cos(angle+0.8*i*0.92**precisionlevel - 0.4*multi*0.92**precisionlevel + 0.4*0.92**precisionlevel)*8, y:Math.sin(angle+0.8*i*0.92**precisionlevel - 0.4*multi*0.92**precisionlevel + 0.4*0.92**precisionlevel)*8}
-                projectiles.push(new Projectile(this.x, this.y, 7+3*weight, "#000000", velocity, pierce, true, false))
+				if (stage == 30) {
+					projectiles.push(new Projectile(this.x, this.y, 7+3*weight, "#FFFFFF", velocity, pierce, true, false))
+				} else {
+					projectiles.push(new Projectile(this.x, this.y, 7+3*weight, "#000000", velocity, pierce, true, false))	
+				}
+                
             }
         } else {
             const angle = Math.atan2(mousePos.y - canvas.height / 2, mousePos.x - canvas.width / 2)
             const velocity = {x:Math.cos(angle)*8, y:Math.sin(angle)*8}
-            projectiles.push(new Projectile(this.x, this.y, 7+3*weight, "#000000", velocity, pierce, true, false))
+			if (stage === 30) {
+				projectiles.push(new Projectile(this.x, this.y, 7+3*weight, "#FFFFFF", velocity, pierce, true, false))
+			} else {
+				projectiles.push(new Projectile(this.x, this.y, 7+3*weight, "#000000", velocity, pierce, true, false))	
+			}
+            
         }
     }
 
